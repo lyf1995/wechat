@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50714
 File Encoding         : 65001
 
-Date: 2018-05-04 17:28:09
+Date: 2018-05-05 10:52:27
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -47,12 +47,12 @@ CREATE TABLE `goods` (
   `price` float(10,0) DEFAULT NULL,
   `subtitle` varchar(255) DEFAULT '',
   `stock` float(10,0) DEFAULT NULL,
-  `mainImage` varchar(255) DEFAULT NULL,
-  `carouselImage` varchar(255) DEFAULT '',
-  `detailImage` varchar(255) DEFAULT '',
-  `typeId` int(11) NOT NULL,
+  `main_image` varchar(255) DEFAULT NULL,
+  `carousel_image` varchar(255) DEFAULT '',
+  `detail_image` varchar(255) DEFAULT '',
+  `type_id` int(11) NOT NULL,
   PRIMARY KEY (`id`),
-  KEY `typeId` (`typeId`)
+  KEY `typeId` (`type_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- ----------------------------
@@ -103,6 +103,7 @@ CREATE TABLE `order` (
   `address_id` int(11) NOT NULL,
   `total_amount` float(255,0) DEFAULT NULL,
   `remarks` varchar(255) DEFAULT '',
+  `order_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `addressId` (`address_id`),
   KEY `userId` (`user_id`)
@@ -118,12 +119,13 @@ CREATE TABLE `order` (
 DROP TABLE IF EXISTS `share`;
 CREATE TABLE `share` (
   `id` int(11) NOT NULL,
-  `shareUserId` int(11) NOT NULL,
-  `goodsId` int(11) NOT NULL,
+  `share_user_id` int(11) NOT NULL,
+  `goods_id` int(11) NOT NULL,
   `amounts` float(255,0) DEFAULT NULL,
+  `share_time` datetime DEFAULT NULL,
   PRIMARY KEY (`id`),
-  KEY `shareUserId` (`shareUserId`),
-  KEY `goodsId` (`goodsId`)
+  KEY `shareUserId` (`share_user_id`),
+  KEY `goodsId` (`goods_id`)
 ) ENGINE=MyISAM DEFAULT CHARSET=latin1;
 
 -- ----------------------------
