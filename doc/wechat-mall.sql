@@ -1,7 +1,7 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : mysql
+Source Server         : lyf
 Source Server Version : 50714
 Source Host           : localhost:3306
 Source Database       : wechat-mall
@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50714
 File Encoding         : 65001
 
-Date: 2018-05-05 10:52:27
+Date: 2018-05-05 21:43:03
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -104,6 +104,7 @@ CREATE TABLE `order` (
   `total_amount` float(255,0) DEFAULT NULL,
   `remarks` varchar(255) DEFAULT '',
   `order_time` datetime DEFAULT NULL,
+  `type` int(255) NOT NULL,
   PRIMARY KEY (`id`),
   KEY `addressId` (`address_id`),
   KEY `userId` (`user_id`)
