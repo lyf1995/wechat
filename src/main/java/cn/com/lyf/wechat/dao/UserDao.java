@@ -15,15 +15,19 @@ import java.util.List;
 
 @Mapper
 public interface UserDao extends BaseMapper<User>{
-	 User selectUserByName(@Param("username")String username,@Param("password")String password);
+	 User selectUserByName(@Param("phone")String phone,@Param("password")String password,@Param("type")int type);
 
-	 User selectUsername(@Param("username")String username);
+	 User selectUsername(@Param("phone")String phone);
 
 	 void newUser(@Param("user")User user);
 
 	 void updatePasswordById(@Param("id")int id,@Param("newPassword")String newPassword);
 
-	 void updateLastLoginById(@Param("id")int id,@Param("lastLogin")Date lastLogin);
+	 void updateLastLoginById(@Param("id")int id,@Param("recentLoginTime")Date recentLoginTime);
+
+	 void updateUserById(@Param("user")User user);
+
+	 void delectUser(@Param("user")User user);
 
 	 List<User> selectAllUser(Page<User> page,@Param("user") User user);
 }

@@ -45,23 +45,22 @@ public class UserController {
     @ResponseBody
     public JSONObject submitLogin(HttpServletRequest request, @RequestBody String json) {
         JSONObject jsonIn = JSONObject.parseObject(json);
-        String username = jsonIn.getString("username");
+        String phone = jsonIn.getString("phone");
         String password = jsonIn.getString("password");
+        int type = jsonIn.getInteger("type");
         JSONObject jsonOut = new JSONObject();
         //设置response.addHeader
         //Global.initResponse();
         UserDto userDto = new UserDto();//不够再加
         try {
-            UsernamePasswordToken token = new UsernamePasswordToken(username, Md5Utils.MD5Encode(password, "utf-8", false));
-            SecurityUtils.getSubject().login(token);
-            Session session = SecurityUtils.getSubject().getSession();
-            User user = userDao.selectUserByName(username, Md5Utils.MD5Encode(password, "utf-8", false));
+
+            User user = userDao.selectUserByName(phone,password,type);
             if (user != null){
                 userDao.updateLastLoginById(user.getId(), new Date());
                 userDto.setId(user.getId());
-                userDto.setUserName(user.getUserName());
-                userDto.setRealName(user.getRealName());
-                userDto.setRoleId(user.getRoleId());
+                userDto.setPhone(user.getPhone());
+                userDto.setName(user.getName());
+                userDto.setPassword(user.getPassword());
                 StaticOptionCode.setResult(jsonOut,0,userDto,true,"");
             }else {
                 StaticOptionCode.setResult(jsonOut,1,"",false,"");
@@ -119,7 +118,7 @@ public class UserController {
         try {
             switch (type) {
                 case 1: {
-                    user = userDao.selectUserByName(username, Md5Utils.MD5Encode(password, "utf-8", false));
+//                    user = userDao.selectUserByName(username, Md5Utils.MD5Encode(password, "utf-8", false));
                     if (user != null) {
                         userDao.updatePasswordById(user.getId(), Md5Utils.MD5Encode(newPassword, "utf-8", false));
                         StaticOptionCode.setResult(jsonOut,4,"",true,"");
@@ -157,38 +156,27 @@ public class UserController {
     public JSONObject newUser(HttpServletRequest request,@RequestBody String json) {
         JSONObject jsonIn = JSONObject.parseObject(json);
         JSONObject jsonOut = new JSONObject();
-        User user2 = userDao.selectUsername(jsonIn.getString("userName"));
+        User user2 = userDao.selectUsername(jsonIn.getString("phone"));
         if (user2 != null) {
             StaticOptionCode.setResult(jsonOut,2,"",false,"");
         } else {
+            User user = new User();
+            user.setPhone(jsonIn.getString("phone"));
+            user.setName(jsonIn.getString("name"));
+            user.setPassword(jsonIn.getString("password"));
+            user.setType(1);
+            user.setIsDelete(0);
+            user.setRegistTime(new Date());
+            try {
+                userDao.newUser(user);
+                StaticOptionCode.setResult(jsonOut,6,"",true,"");
+            } catch (Exception e) {
+                e.printStackTrace();
+                StaticOptionCode.setResult(jsonOut,7,"",false,"");
+            }
             StaticOptionCode.setResult(jsonOut,3,"",true,"");
         }
-        User user = new User();
-        user.setRoleId(jsonIn.getString("roleId"));
-        user.setUserName(jsonIn.getString("userName"));
-        user.setPassword(jsonIn.getString("password"));
-        user.setRealName(jsonIn.getString("realName"));
-        user.setMobile(jsonIn.getIntValue("mobile"));
-        user.setEmail(jsonIn.getString("email"));
-        user.setPassword(Md5Utils.MD5Encode(user.getPassword(),"utf-8",false));
-        user.setStatus("0");
-        user.setCreateTime(new Date());
-        user.setCreateBy(jsonIn.getString("man"));
-        if (user.getRoleId().equals("7")) {
-            user.setRoleName("管理员");
-        }else{
-            user.setRoleName("用户");
-        }
-        //设置response.addHeader
-        //        Global.initResponse();
-        String ip=Global.getIpAddr(request);
-        try {
-            userDao.newUser(user);
-            StaticOptionCode.setResult(jsonOut,6,"",true,"");
-        } catch (Exception e) {
-            e.printStackTrace();
-            StaticOptionCode.setResult(jsonOut,7,"",false,"");
-        }
+
         return jsonOut;
     }
 
@@ -202,24 +190,12 @@ public class UserController {
         JSONObject jsonIn = JSONObject.parseObject(json);
         User user = new User();
         user.setId(jsonIn.getIntValue("id"));
-        user.setRoleId(jsonIn.getString("roleId"));//
-        user.setUserName(jsonIn.getString("username"));
-//        user.setPassword(jsonIn.getString("password"));
-        user.setRealName(jsonIn.getString("realName"));
-        user.setMobile(jsonIn.getIntValue("mobile"));
-        user.setEmail(jsonIn.getString("email"));
-//        user.setDepartment(jsonIn.getString("department"));
-//        user.setBirthday(jsonIn.getDate("birthday"));
-//        user.setCity(jsonIn.getString("city"));
-//        user.setQq(jsonIn.getString("qq"));
-//        user.setWeixin(jsonIn.getString("weixin"));
-//        user.setSex(jsonIn.getString("sex"));
-        user.setUpdateBy(jsonIn.getString("man"));
-        user.setUpdateTime(new Date());
-        String ip=Global.getIpAddr(request);
+        user.setPhone(jsonIn.getString("phone"));//
+        user.setName(jsonIn.getString("name"));
+        user.setPassword(jsonIn.getString("password"));
         JSONObject jsonOut = new JSONObject();
         try {
-            userDao.updateById(user);
+            userDao.updateUserById(user);
             StaticOptionCode.setResult(jsonOut,13,"",true,"");
         } catch (Exception e) {
             e.printStackTrace();
@@ -236,18 +212,16 @@ public class UserController {
     @ResponseBody
     public JSONObject selectAllUser(HttpServletRequest request,@RequestBody String json){
         JSONObject jsonIn = JSONObject.parseObject(json);
-        Integer current=jsonIn.getInteger("current");
-        Integer size=jsonIn.getInteger("size");
+        Integer pageIndex=jsonIn.getInteger("pageIndex");
+        Integer pageSize=jsonIn.getInteger("pageSize");
         User user = new User();
         //工号
-        user.setId(jsonIn.getString("id").equals("")?null:jsonIn.getIntValue("id"));
-        user.setUserName(jsonIn.getString("userName").equals("")?null:"%"+jsonIn.getString("userName")+"%");
-        user.setRealName(jsonIn.getString("realName").equals("")?null:"%"+jsonIn.getString("realName")+"%");
-        user.setRoleId(jsonIn.getString("roleId"));
+        user.setPhone(jsonIn.getString("phone").equals("")?null:jsonIn.getString("phone"));
+        user.setName(jsonIn.getString("name").equals("")?null:"%"+jsonIn.getString("name")+"%");
 
         JSONObject jsonOut = new JSONObject();
         try {
-            Page<User> page = new Page<User>(current,size);
+            Page<User> page = new Page<User>(pageIndex,pageSize);
             page= userService.selectAllUser(page, user);
             StaticOptionCode.setResult(jsonOut,9,page.getRecords(),true,""+page.getTotal());
         } catch (Exception e) {
@@ -267,14 +241,11 @@ public class UserController {
     public JSONObject delectUser(HttpServletRequest request,@RequestBody String json){
         JSONObject jsonIn = JSONObject.parseObject(json);
         User user = new User();
-        //工号
         user.setId(jsonIn.getIntValue("id"));
-        user.setIsDelete("1");
-        String man = jsonIn.getString("man");
-        String ip=Global.getIpAddr(request);
+        user.setIsDelete(1);
         JSONObject jsonOut = new JSONObject();
         try {
-            userDao.updateById(user);
+            userDao.delectUser(user);
             StaticOptionCode.setResult(jsonOut,15,"",true,"");
         } catch (Exception e) {
             e.printStackTrace();
