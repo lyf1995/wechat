@@ -11,11 +11,23 @@
 
 	<select id="selectAllUser" resultType="cn.com.lyf.wechat.entity.User">
 		select * from t_user u where is_delete = '0' and type = '1'
-		<if test="user.phone!= null">
+		<if test="user.phone!=null and user.phone!=''">
 			AND u.phone = #{user.phone}
 		</if>
-		<if test="user.name != null">
+		<if test="user.name!=null and user.name!=''">
 			AND u.name LIKE #{user.name}
+		</if>
+		<if test="recentLoginStartTime!=null and recentLoginStartTime!=''">
+			AND u.recent_login_time >= #{recentLoginStartTime}
+		</if>
+		<if test="recentLoginEndTime!=null and recentLoginEndTime!=''">
+			AND #{recentLoginEndTime} >= u.recent_login_time
+		</if>
+		<if test="registStartTime!=null and registStartTime!=''">
+			AND u.regist_time >= #{registStartTime}
+		</if>
+		<if test="registEndTime!=null and registEndTime!=''">
+			AND #{registEndTime} >= u.regist_time
 		</if>
 	</select>
 

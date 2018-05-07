@@ -9,5 +9,5 @@ import com.baomidou.mybatisplus.service.IService;
  */
 
 public interface UserService extends IService<User>{
-    Page<User> selectAllUser(Page<User> page, User user);
+    Page<User> selectAllUser(Page<User> page, User user, String recentLoginStartTime,String recentLoginEndTime,String registStartTime,String registEndTime);
 }

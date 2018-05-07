@@ -13,6 +13,7 @@ import cn.com.lyf.wechat.util.Md5Utils;
 import cn.com.lyf.wechat.util.StaticOptionCode;
 import com.alibaba.druid.support.logging.Log;
 import com.alibaba.druid.support.logging.LogFactory;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -74,7 +75,7 @@ public class UserController {
 
     /**
      * 账号重复判断
-     * hsz 2018年3月13日17:31:51
+     * lyf 2018年3月13日17:31:51
      */
     @RequestMapping(value = "/selectUsername")
     @ResponseBody
@@ -98,7 +99,7 @@ public class UserController {
      * 修改密码
      * 1.有原密码修改新密码
      * 2.超级管理员帮助修改密码
-     * hsz 2018年3月15日14:14:04
+     * lyf 2018年3月15日14:14:04
      */
     @RequestMapping(value = "/updatePassword")
     @ResponseBody
@@ -149,7 +150,7 @@ public class UserController {
 
     /**
      * 新建用户
-     * hsz 2018年3月13日16:15:28
+     * lyf 2018年3月13日16:15:28
      */
     @RequestMapping(value="/newUser",method=RequestMethod.POST)
     @ResponseBody
@@ -179,6 +180,44 @@ public class UserController {
 
         return jsonOut;
     }
+
+
+    /**
+     * 批量创建用户
+     * lyf 2018年3月13日16:15:28
+     */
+    @RequestMapping(value="/batchAddUser",method=RequestMethod.POST)
+    @ResponseBody
+    public JSONObject batchAddUser(HttpServletRequest request,@RequestBody String json) {
+//        JSONObject jsonIn = JSONObject.parseObject(json);
+        JSONArray jsonIn = JSONArray.parseArray(json);
+        JSONObject jsonOut = new JSONObject();
+        for(int i = 0;i<jsonIn.size();i++){
+            JSONObject obj = jsonIn.getJSONObject(i);
+            User user2 = userDao.selectUsername(obj.getString("phone"));
+            if (user2 != null) {
+                StaticOptionCode.setResult(jsonOut,2,"",false,obj.getString("phone"));
+                break;
+            } else {
+                User user = new User();
+                user.setPhone(obj.getString("phone"));
+                user.setName(obj.getString("name"));
+                user.setPassword(obj.getString("password"));
+                user.setType(1);
+                user.setIsDelete(0);
+                user.setRegistTime(new Date());
+                try {
+                    userDao.newUser(user);
+                    StaticOptionCode.setResult(jsonOut,6,"",true,"");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    StaticOptionCode.setResult(jsonOut,7,"",false,"");
+                }
+            }
+        }
+        return jsonOut;
+    }
+
 
     /**
      * 修改用户信息
@@ -218,11 +257,15 @@ public class UserController {
         //工号
         user.setPhone(jsonIn.getString("phone").equals("")?null:jsonIn.getString("phone"));
         user.setName(jsonIn.getString("name").equals("")?null:"%"+jsonIn.getString("name")+"%");
+        String recentLoginStartTime = jsonIn.getString("recentLoginStartTime");
+        String recentLoginEndTime = jsonIn.getString("recentLoginEndTime");
+        String registStartTime = jsonIn.getString("registStartTime");
+        String registEndTime = jsonIn.getString("registEndTime");
 
         JSONObject jsonOut = new JSONObject();
         try {
             Page<User> page = new Page<User>(pageIndex,pageSize);
-            page= userService.selectAllUser(page, user);
+            page= userService.selectAllUser(page, user,recentLoginStartTime,recentLoginEndTime,registStartTime,registEndTime);
             StaticOptionCode.setResult(jsonOut,9,page.getRecords(),true,""+page.getTotal());
         } catch (Exception e) {
             e.printStackTrace();

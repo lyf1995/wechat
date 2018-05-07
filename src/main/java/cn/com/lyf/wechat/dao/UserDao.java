@@ -29,5 +29,5 @@ public interface UserDao extends BaseMapper<User>{
 
 	 void delectUser(@Param("user")User user);
 
-	 List<User> selectAllUser(Page<User> page,@Param("user") User user);
+	 List<User> selectAllUser(Page<User> page,@Param("user") User user,@Param("recentLoginStartTime") String recentLoginStartTime,@Param("recentLoginEndTime") String recentLoginEndTime,@Param("registStartTime") String registStartTime,@Param("registEndTime") String registEndTime);
 }
