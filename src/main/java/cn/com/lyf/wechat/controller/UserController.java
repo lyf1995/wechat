@@ -254,7 +254,6 @@ public class UserController {
         Integer pageIndex=jsonIn.getInteger("pageIndex");
         Integer pageSize=jsonIn.getInteger("pageSize");
         User user = new User();
-        //工号
         user.setPhone(jsonIn.getString("phone").equals("")?null:jsonIn.getString("phone"));
         user.setName(jsonIn.getString("name").equals("")?null:"%"+jsonIn.getString("name")+"%");
         String recentLoginStartTime = jsonIn.getString("recentLoginStartTime");

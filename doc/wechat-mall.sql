@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50714
 File Encoding         : 65001
 
-Date: 2018-05-07 10:17:24
+Date: 2018-05-07 23:18:24
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -44,35 +44,22 @@ CREATE TABLE `t_goods` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `name` varchar(255) CHARACTER SET utf8 DEFAULT '',
   `vip_price` float(10,0) DEFAULT NULL,
-  `price` float(10,0) DEFAULT NULL,
+  `retail_price` float(10,0) DEFAULT NULL,
   `subtitle` varchar(255) CHARACTER SET utf8 DEFAULT '',
   `stock` float(10,0) DEFAULT NULL,
   `main_image` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `carousel_image` varchar(255) CHARACTER SET utf8 DEFAULT '',
   `detail_image` varchar(255) CHARACTER SET utf8 DEFAULT '',
   `type_id` int(11) NOT NULL,
+  `is_delete` int(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `typeId` (`type_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=2 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of t_goods
 -- ----------------------------
-
--- ----------------------------
--- Table structure for t_goodstype
--- ----------------------------
-DROP TABLE IF EXISTS `t_goodstype`;
-CREATE TABLE `t_goodstype` (
-  `id` int(11) NOT NULL AUTO_INCREMENT,
-  `type_name` varchar(255) CHARACTER SET utf8 DEFAULT '',
-  `type_describe` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
-
--- ----------------------------
--- Records of t_goodstype
--- ----------------------------
+INSERT INTO `t_goods` VALUES ('1', '智利泰瑞贵族珍藏佳美娜干红葡萄酒750mL', '120', '130', '非凡深邃的红宝石颜色，红色浆果、烟草、巧克力和纯净的果香演绎珍藏赤霞珠的盛世繁华、热情而高雅。', '1000', null, '', '', '4', '0');
 
 -- ----------------------------
 -- Table structure for t_goods_order
@@ -90,6 +77,28 @@ CREATE TABLE `t_goods_order` (
 -- ----------------------------
 -- Records of t_goods_order
 -- ----------------------------
+
+-- ----------------------------
+-- Table structure for t_goods_type
+-- ----------------------------
+DROP TABLE IF EXISTS `t_goods_type`;
+CREATE TABLE `t_goods_type` (
+  `id` int(11) NOT NULL AUTO_INCREMENT,
+  `type_name` varchar(255) CHARACTER SET utf8 DEFAULT '',
+  `type_describe` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `is_delete` int(255) DEFAULT NULL,
+  PRIMARY KEY (`id`)
+) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+
+-- ----------------------------
+-- Records of t_goods_type
+-- ----------------------------
+INSERT INTO `t_goods_type` VALUES ('1', '食品生鲜', '食品生鲜分类', '0');
+INSERT INTO `t_goods_type` VALUES ('2', '果蔬休闲', '果蔬休闲分类', '0');
+INSERT INTO `t_goods_type` VALUES ('3', '精粮副食', '精粮副食分类', '0');
+INSERT INTO `t_goods_type` VALUES ('4', '酒水茶饮', '酒水茶饮分类', '0');
+INSERT INTO `t_goods_type` VALUES ('5', 'test1', 'test1分类', '0');
+INSERT INTO `t_goods_type` VALUES ('6', 'test2', 'test2分类', '1');
 
 -- ----------------------------
 -- Table structure for t_order
@@ -187,7 +196,7 @@ CREATE TABLE `t_user` (
 -- ----------------------------
 -- Records of t_user
 -- ----------------------------
-INSERT INTO `t_user` VALUES ('1', 'admin', 'admin', '系统管理员', '2018-05-06 00:00:00', '2018-05-06 22:52:43', '0', '0');
+INSERT INTO `t_user` VALUES ('1', 'admin', 'admin', '系统管理员', '2018-05-06 00:00:00', '2018-05-07 21:42:58', '0', '0');
 INSERT INTO `t_user` VALUES ('2', '17826804112', '123', '张三', '2018-05-06 21:32:15', null, '0', '1');
 INSERT INTO `t_user` VALUES ('3', '12312312312', '123', '李四', '2018-05-06 21:16:14', null, '0', '1');
 INSERT INTO `t_user` VALUES ('4', '17826804000', '123', '王五', '2018-05-06 21:18:06', null, '0', '1');

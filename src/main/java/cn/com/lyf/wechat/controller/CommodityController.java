@@ -1,9 +1,12 @@
 package cn.com.lyf.wechat.controller;
 
+import cn.com.lyf.wechat.dao.CommodityDao;
 import cn.com.lyf.wechat.dao.TypeDao;
-import cn.com.lyf.wechat.dto.TypeDto;
+import cn.com.lyf.wechat.entity.Commodity;
 import cn.com.lyf.wechat.entity.Type;
+import cn.com.lyf.wechat.service.CommodityService;
 import cn.com.lyf.wechat.util.StaticOptionCode;
+import com.baomidou.mybatisplus.plugins.Page;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -23,6 +26,10 @@ import java.util.List;
 public class CommodityController {
     @Autowired
     private TypeDao typeDao;
+    @Autowired
+    private CommodityDao commodityDao;
+    @Autowired
+    private CommodityService commodityService;
 
     /*
         查询所有分类
@@ -36,9 +43,9 @@ public class CommodityController {
         if (!(jsonIn.getString("id").equals(""))){
             type.setId(jsonIn.getIntValue("id"));
         }
-//
-        type.setTypeName("%"+jsonIn.getString("typeName")+"%");
-
+        if(!(jsonIn.getString("typeName").equals(""))){
+            type.setTypeName("%"+jsonIn.getString("typeName")+"%");
+        }
         List<Type> typeList = typeDao.selectAllType(type);
         StaticOptionCode.setResult(jsonOut,0,typeList,true,"");
         return jsonOut;
@@ -111,5 +118,36 @@ public class CommodityController {
         }
         return jsonOut;
     }
+
+    /*
+        分页查询所有商品
+     */
+    @RequestMapping(value = "/selectAllCommodity")
+    @ResponseBody
+    public JSONObject selectAllCommodity(HttpServletRequest request, @RequestBody String json) {
+        JSONObject jsonIn = JSONObject.parseObject(json);
+        JSONObject jsonOut = new JSONObject();
+        Integer pageIndex=jsonIn.getInteger("pageIndex");
+        Integer pageSize=jsonIn.getInteger("pageSize");
+        Commodity commodity = new Commodity();
+
+        if (!(jsonIn.getString("categoryName").equals(""))){
+            commodity.setTypeId(jsonIn.getIntValue("categoryName"));
+        }
+        commodity.setName(jsonIn.getString("name").equals("")?null:"%"+jsonIn.getString("name")+"%");
+        commodity.setSubtitle(jsonIn.getString("subtitle").equals("")?null:"%"+jsonIn.getString("subtitle")+"%");
+        commodity.setIsDelete(jsonIn.getIntValue("status"));
+
+        try {
+            Page<Commodity> page = new Page<Commodity>(pageIndex,pageSize);
+            page= commodityService.selectAllCommodity(page, commodity);
+            StaticOptionCode.setResult(jsonOut,9,page.getRecords(),true,""+page.getTotal());
+        } catch (Exception e) {
+            e.printStackTrace();
+            StaticOptionCode.setResult(jsonOut,10,"",false,"");
+        }
+        return jsonOut;
+    }
+
 }
 

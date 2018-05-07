@@ -16,14 +16,6 @@
 		</if>
 	</select>
 
-	<!--<update id="updatePasswordById">-->
-	<!--UPDATE t_user SET password = #{newPassword} WHERE id = #{id}-->
-	<!--</update>-->
-
-	<!--<update id="updateLastLoginById">-->
-	<!--UPDATE t_user SET recent_login_time = #{recentLoginTime} WHERE id = #{id}-->
-	<!--</update>-->
-
 	<update id="updateTypeById">
 		UPDATE t_goods_type SET type_name = #{type.typeName},type_describe = #{type.typeDescribe} WHERE id = #{type.id}
 	</update>
