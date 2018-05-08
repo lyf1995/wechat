@@ -24,4 +24,8 @@ public interface CommodityDao extends BaseMapper<Commodity> {
     void reductionCommodity(@Param("id") int id);
 
     void addCommodity(@Param("commodity") Commodity commodity);
+
+    List<Commodity> selectCommodityByTypeId(@Param("typeId")int typeId);
+
+    List<Commodity> selectCommodityByName(@Param("name")String name);
 }

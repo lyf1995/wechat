@@ -48,8 +48,8 @@
 	</update>
 
 	<insert id="newUser">
-		INSERT INTO t_user (phone, name, password, regist_time,is_delete,type)
+		INSERT INTO t_user (phone, name, password,money, regist_time,is_delete,type)
 		VALUES
-		(#{user.phone},#{user.name},#{user.password}, #{user.registTime}, #{user.isDelete}, #{user.type})
+		(#{user.phone},#{user.name},#{user.password},#{user.money}, #{user.registTime}, #{user.isDelete}, #{user.type})
 	</insert>
 </mapper>

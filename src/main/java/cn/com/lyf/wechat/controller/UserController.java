@@ -56,11 +56,13 @@ public class UserController {
         try {
 
             User user = userDao.selectUserByName(phone,password,type);
+            System.out.println(user);
             if (user != null){
                 userDao.updateLastLoginById(user.getId(), new Date());
                 userDto.setId(user.getId());
                 userDto.setPhone(user.getPhone());
                 userDto.setName(user.getName());
+                userDto.setMoney(user.getMoney());
                 userDto.setPassword(user.getPassword());
                 StaticOptionCode.setResult(jsonOut,0,userDto,true,"");
             }else {
@@ -196,6 +198,7 @@ public class UserController {
             user.setPhone(jsonIn.getString("phone"));
             user.setName(jsonIn.getString("name"));
             user.setPassword(jsonIn.getString("password"));
+            user.setMoney(1000);
             user.setType(1);
             user.setIsDelete(0);
             user.setRegistTime(new Date());
@@ -234,6 +237,7 @@ public class UserController {
                 user.setPhone(obj.getString("phone"));
                 user.setName(obj.getString("name"));
                 user.setPassword(obj.getString("password"));
+                user.setMoney(1000);
                 user.setType(1);
                 user.setIsDelete(0);
                 user.setRegistTime(new Date());

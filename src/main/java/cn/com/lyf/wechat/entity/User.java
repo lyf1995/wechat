@@ -12,6 +12,7 @@ public class User implements Serializable{
     private String phone;
     private String name;
     private String password;
+    private float money;
     private Date registTime;
     private Date recentLoginTime;
     private int isDelete;
@@ -47,6 +48,14 @@ public class User implements Serializable{
 
     public void setPassword(String password) {
         this.password = password;
+    }
+
+    public float getMoney() {
+        return money;
+    }
+
+    public void setMoney(float money) {
+        this.money = money;
     }
 
     public Date getRegistTime() {

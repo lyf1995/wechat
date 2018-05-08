@@ -9,8 +9,17 @@ public class UserDto {
     private String phone;
     private String name;
     private String password;
+    private float money;
     private Date registTime;
     private Date recentLoginTime;
+
+    public float getMoney() {
+        return money;
+    }
+
+    public void setMoney(float money) {
+        this.money = money;
+    }
 
     public int getId() {
         return id;

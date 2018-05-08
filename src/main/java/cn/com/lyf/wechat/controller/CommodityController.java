@@ -16,6 +16,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import javax.servlet.http.HttpServletRequest;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -162,6 +163,60 @@ public class CommodityController {
         try {
             Commodity commodity = commodityDao.selectCommodityById(id);
             StaticOptionCode.setResult(jsonOut,9,commodity,true,"");
+        } catch (Exception e) {
+            e.printStackTrace();
+            StaticOptionCode.setResult(jsonOut,10,"",true,"");
+        }
+        return jsonOut;
+    }
+
+    /*
+        根据分类id查询商品
+     */
+    @RequestMapping(value = "/selectCommodityByTypeId")
+    @ResponseBody
+    public JSONObject selectCommodityByTypeId(HttpServletRequest request, @RequestBody String json) {
+        JSONObject jsonIn = JSONObject.parseObject(json);
+        JSONObject jsonOut = new JSONObject();
+        int typeId = jsonIn.getIntValue("typeId");
+        try {
+            if(typeId == 0){
+                List<Commodity> commodityList = new ArrayList<>();
+                List<Commodity> commodityList1 = commodityDao.selectCommodityByTypeId(1);
+                List<Commodity> commodityList2 = commodityDao.selectCommodityByTypeId(2);
+                List<Commodity> commodityList3 = commodityDao.selectCommodityByTypeId(3);
+                List<Commodity> commodityList4 = commodityDao.selectCommodityByTypeId(4);
+                for(int i=0;i<2;i++){
+                    commodityList.add(commodityList1.get(i));
+                    commodityList.add(commodityList2.get(i));
+                    commodityList.add(commodityList3.get(i));
+                    commodityList.add(commodityList4.get(i));
+                }
+                StaticOptionCode.setResult(jsonOut,9,commodityList,true,"");
+            }
+            else{
+                List<Commodity> commodityList = commodityDao.selectCommodityByTypeId(typeId);
+                StaticOptionCode.setResult(jsonOut,9,commodityList,true,"");
+            }
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            StaticOptionCode.setResult(jsonOut,10,"",true,"");
+        }
+        return jsonOut;
+    }
+    /*
+       根据商品名称查询商品
+    */
+    @RequestMapping(value = "/selectCommodityByName")
+    @ResponseBody
+    public JSONObject selectCommodityByName(HttpServletRequest request, @RequestBody String json) {
+        JSONObject jsonIn = JSONObject.parseObject(json);
+        JSONObject jsonOut = new JSONObject();
+        String name = "%"+jsonIn.getString("name")+"%";
+        try {
+            List<Commodity> commodityList = commodityDao.selectCommodityByName(name);
+            StaticOptionCode.setResult(jsonOut,9,commodityList,true,"");
         } catch (Exception e) {
             e.printStackTrace();
             StaticOptionCode.setResult(jsonOut,10,"",true,"");
