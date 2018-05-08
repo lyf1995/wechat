@@ -7,9 +7,9 @@
     <!--</select>-->
 
     <select id="selectAllCommodity" resultType="cn.com.lyf.wechat.entity.Commodity">
-        select * from t_goods t where
-        <if test="commodity.isDelete!=null and commodity.isDelete!=''">
-            AND t.is_delete = #{commodity.isDelete}
+        select * from t_goods t where t.is_delete = #{commodity.isDelete}
+        <if test="commodity.typeId!=null and commodity.typeId!=''">
+            AND t.type_id = #{commodity.typeId}
         </if>
         <if test="commodity.name!=null and commodity.name!=''">
             AND t.name LIKE #{commodity.name}
@@ -19,18 +19,26 @@
         </if>
     </select>
 
+    <select id="selectCommodityById" resultType="cn.com.lyf.wechat.entity.Commodity">
+        select * from t_goods t where t.id = #{id}
+    </select>
 
-    <!--<update id="updateTypeById">-->
-        <!--UPDATE t_goods_type SET type_name = #{type.typeName},type_describe = #{type.typeDescribe} WHERE id = #{type.id}-->
-    <!--</update>-->
+    <update id="updateCommodity">
+        UPDATE t_goods SET name = #{commodity.name},subtitle = #{commodity.subtitle},retail_price = #{commodity.retailPrice}
+        ,vip_price = #{commodity.vipPrice},stock = #{commodity.stock},type_id = #{commodity.typeId},is_delete = #{commodity.isDelete} WHERE id = #{commodity.id}
+    </update>
 
-    <!--<update id="deleteType">-->
-        <!--UPDATE t_goods_type SET is_delete = #{type.isDelete} WHERE id = #{type.id}-->
-    <!--</update>-->
+    <update id="deleteCommodity">
+        UPDATE t_goods SET is_delete = 1 WHERE id = #{id}
+    </update>
 
-    <!--<insert id="addType">-->
-        <!--INSERT INTO t_goods_type (type_name,type_describe,is_delete)-->
-        <!--VALUES-->
-        <!--(#{type.typeName},#{type.typeDescribe},#{type.isDelete})-->
-    <!--</insert>-->
+    <update id="reductionCommodity">
+        UPDATE t_goods SET is_delete = 0 WHERE id = #{id}
+    </update>
+    <insert id="addCommodity">
+        INSERT INTO t_goods (name,subtitle,type_id,retail_price,vip_price,stock,is_delete)
+        VALUES
+        (#{commodity.name},#{commodity.subtitle},#{commodity.typeId}, #{commodity.retailPrice}
+        ,#{commodity.vipPrice},#{commodity.stock},#{commodity.isDelete})
+    </insert>
 </mapper>

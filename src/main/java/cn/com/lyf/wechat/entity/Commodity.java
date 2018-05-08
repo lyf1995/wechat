@@ -14,7 +14,7 @@ public class Commodity implements Serializable {
     private float vipPrice;
     private float retailPrice;
     private String subtitle;
-    private String stock;
+    private int stock;
     private String mainImage;
     private String carouselImage;
     private String detailImage;
@@ -69,11 +69,11 @@ public class Commodity implements Serializable {
         this.subtitle = subtitle;
     }
 
-    public String getStock() {
+    public int getStock() {
         return stock;
     }
 
-    public void setStock(String stock) {
+    public void setStock(int stock) {
         this.stock = stock;
     }
 

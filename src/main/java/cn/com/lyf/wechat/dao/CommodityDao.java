@@ -14,4 +14,14 @@ import java.util.List;
 @Mapper
 public interface CommodityDao extends BaseMapper<Commodity> {
     List<Commodity> selectAllCommodity(Page<Commodity> page, @Param("commodity") Commodity commodity);
+
+    Commodity selectCommodityById(@Param("id")int id);
+
+    void updateCommodity(@Param("commodity") Commodity commodity);
+
+    void deleteCommodity(@Param("id") int id);
+
+    void reductionCommodity(@Param("id") int id);
+
+    void addCommodity(@Param("commodity") Commodity commodity);
 }
