@@ -74,6 +74,37 @@ public class UserController {
     }
 
     /**
+     * 注册
+     */
+    @RequestMapping(value = "/regist")
+    @ResponseBody
+    public JSONObject regist(HttpServletRequest request, @RequestBody String json) {
+        JSONObject jsonIn = JSONObject.parseObject(json);
+        JSONObject jsonOut = new JSONObject();
+        User user2 = userDao.selectUsername(jsonIn.getString("phone"));
+        if (user2 != null) {
+            StaticOptionCode.setResult(jsonOut,2,"",false,"");
+        } else {
+            User user = new User();
+            user.setPhone(jsonIn.getString("phone"));
+            user.setName(jsonIn.getString("phone"));
+            user.setPassword(jsonIn.getString("password"));
+            user.setType(1);
+            user.setIsDelete(0);
+            user.setRegistTime(new Date());
+            try {
+                userDao.newUser(user);
+                StaticOptionCode.setResult(jsonOut,6,"",true,"");
+            } catch (Exception e) {
+                e.printStackTrace();
+                StaticOptionCode.setResult(jsonOut,7,"",false,"");
+            }
+            StaticOptionCode.setResult(jsonOut,3,"",true,"");
+        }
+        return jsonOut;
+    }
+
+    /**
      * 账号重复判断
      * lyf 2018年3月13日17:31:51
      */
