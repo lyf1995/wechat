@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.lyf.wechat.dao.ShoppingCarDao">
+
+    <select id="selectAddressById" resultType="cn.com.lyf.wechat.entity.ShoppingCar">
+        select * from t_address where id = #{addressId} and is_delete = '0'
+    </select>
+
+    <select id="selectAllShoppingCar" resultType="cn.com.lyf.wechat.entity.ShoppingCar">
+        select * from t_shoppingcar t where is_delete = '0'
+        <if test="userId!=null and userId!=''">
+            AND t.user_id = #{userId}
+        </if>
+    </select>
+
+    <update id="updateAddress">
+        UPDATE t_address SET contacts = #{address.contacts},phone = #{address.phone},province = #{address.province},city = #{address.city},area = #{address.area},detail_address = #{address.detailAddress} WHERE id = #{address.id}
+    </update>
+
+    <update id="deleteAddress">
+        UPDATE t_address SET is_delete = 1 WHERE id = #{id}
+    </update>
+
+    <insert id="addShoppingCar">
+        INSERT INTO t_shoppingcar (user_id,goods_id,goods_number,is_delete)
+        VALUES
+        (#{shoppingCar.userId},#{shoppingCar.goodsId},#{shoppingCar.goodsNumber},#{shoppingCar.isDelete})
+    </insert>
+
+    <update id="updateDefault">
+        UPDATE t_address SET is_default = 1 WHERE id = #{addressId}
+    </update>
+</mapper>

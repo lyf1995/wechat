@@ -1,7 +1,7 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : lyf
+Source Server         : mysql
 Source Server Version : 50714
 Source Host           : localhost:3306
 Source Database       : wechat-mall
@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50714
 File Encoding         : 65001
 
-Date: 2018-05-09 10:57:28
+Date: 2018-05-09 18:23:23
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -24,17 +24,23 @@ CREATE TABLE `t_address` (
   `contacts` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `phone` varchar(255) CHARACTER SET utf8 DEFAULT '',
   `province` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
-  `province_city` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `city` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `area` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `detail_address` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `is_default` int(11) DEFAULT NULL,
   `user_id` int(11) NOT NULL,
+  `is_delete` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `userId` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=5 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of t_address
 -- ----------------------------
+INSERT INTO `t_address` VALUES ('1', '鲁钺锋', '17826804660', '浙江省', '杭州市', '西湖区', '西和公寓10幢', '1', '2', '0');
+INSERT INTO `t_address` VALUES ('2', '鲁钺锋', '17826804660', '天津市', '天津市', '河东区', '哈哈', '0', '2', '0');
+INSERT INTO `t_address` VALUES ('3', '张三', '17826804000', '北京市', '北京市', '东城区', '123123', '1', '3', '0');
+INSERT INTO `t_address` VALUES ('4', '1111', '1111111111', '北京市', '北京市', '东城区', '11111', '0', '2', '1');
 
 -- ----------------------------
 -- Table structure for t_goods
@@ -190,14 +196,17 @@ CREATE TABLE `t_shoppingcar` (
   `user_id` int(11) NOT NULL,
   `goods_id` int(11) NOT NULL,
   `goods_number` int(11) NOT NULL,
+  `is_delete` int(11) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `userId` (`user_id`),
   KEY `goodsId` (`goods_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of t_shoppingcar
 -- ----------------------------
+INSERT INTO `t_shoppingcar` VALUES ('1', '2', '1', '1', '0');
+INSERT INTO `t_shoppingcar` VALUES ('2', '2', '13', '2', '0');
 
 -- ----------------------------
 -- Table structure for t_user
@@ -214,15 +223,16 @@ CREATE TABLE `t_user` (
   `is_delete` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `type` int(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=9 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of t_user
 -- ----------------------------
-INSERT INTO `t_user` VALUES ('1', 'admin', 'admin', '系统管理员', null, '2018-05-06 00:00:00', '2018-05-08 09:55:28', '0', '0');
-INSERT INTO `t_user` VALUES ('2', '12312312312', '123', '张三', '1000', '2018-05-06 21:32:15', '2018-05-08 23:20:57', '0', '1');
-INSERT INTO `t_user` VALUES ('3', '12312312313', '123', '李四', '1000', '2018-05-06 21:16:14', null, '0', '1');
+INSERT INTO `t_user` VALUES ('1', 'admin', 'admin', '系统管理员', null, '2018-05-06 00:00:00', '2018-05-09 10:57:36', '0', '0');
+INSERT INTO `t_user` VALUES ('2', '12312312312', '123', '张三', '1000', '2018-05-06 21:32:15', '2018-05-09 16:18:07', '0', '1');
+INSERT INTO `t_user` VALUES ('3', '12312312313', '123', '李四', '1000', '2018-05-06 21:16:14', '2018-05-09 16:17:09', '0', '1');
 INSERT INTO `t_user` VALUES ('4', '17826804000', '123', '王五', '1000', '2018-05-06 21:18:06', null, '0', '1');
 INSERT INTO `t_user` VALUES ('5', '17474847811', '123', '赵六', '1000', '2018-05-06 21:46:25', null, '0', '1');
 INSERT INTO `t_user` VALUES ('6', '12345678901', '123', '陈七', '1000', '2018-05-06 23:04:58', '2018-05-08 22:57:13', '0', '1');
 INSERT INTO `t_user` VALUES ('7', '12312312311', '123', '12312312311', '1000', '2018-05-08 22:56:32', '2018-05-08 22:58:47', '0', '1');
+INSERT INTO `t_user` VALUES ('8', '12312312322', '123', '', '1000', '2018-05-09 10:59:09', null, '0', '1');

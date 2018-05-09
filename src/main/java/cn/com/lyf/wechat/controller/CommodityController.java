@@ -100,7 +100,7 @@ public class CommodityController {
     }
 
     /**
-     * 修改分类信息
+     * 删除分类信息
      * @return
      */
     @RequestMapping(value="/deleteType")
