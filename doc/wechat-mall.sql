@@ -1,7 +1,7 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : mysql
+Source Server         : lyf
 Source Server Version : 50714
 Source Host           : localhost:3306
 Source Database       : wechat-mall
@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50714
 File Encoding         : 65001
 
-Date: 2018-05-08 16:46:40
+Date: 2018-05-09 10:57:28
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -208,19 +208,21 @@ CREATE TABLE `t_user` (
   `phone` varchar(255) CHARACTER SET utf8 DEFAULT '',
   `password` varchar(255) CHARACTER SET utf8 DEFAULT '',
   `name` varchar(255) CHARACTER SET utf8 DEFAULT '',
+  `money` float(255,0) DEFAULT NULL,
   `regist_time` datetime DEFAULT NULL,
   `recent_login_time` datetime DEFAULT NULL,
   `is_delete` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   `type` int(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of t_user
 -- ----------------------------
-INSERT INTO `t_user` VALUES ('1', 'admin', 'admin', '系统管理员', '2018-05-06 00:00:00', '2018-05-08 09:55:28', '0', '0');
-INSERT INTO `t_user` VALUES ('2', '17826804112', '123', '张三', '2018-05-06 21:32:15', null, '0', '1');
-INSERT INTO `t_user` VALUES ('3', '12312312312', '123', '李四', '2018-05-06 21:16:14', null, '0', '1');
-INSERT INTO `t_user` VALUES ('4', '17826804000', '123', '王五', '2018-05-06 21:18:06', null, '0', '1');
-INSERT INTO `t_user` VALUES ('5', '17474847811', '123', '赵六', '2018-05-06 21:46:25', null, '0', '1');
-INSERT INTO `t_user` VALUES ('6', '12345678901', '123', '陈七', '2018-05-06 23:04:58', null, '0', '1');
+INSERT INTO `t_user` VALUES ('1', 'admin', 'admin', '系统管理员', null, '2018-05-06 00:00:00', '2018-05-08 09:55:28', '0', '0');
+INSERT INTO `t_user` VALUES ('2', '12312312312', '123', '张三', '1000', '2018-05-06 21:32:15', '2018-05-08 23:20:57', '0', '1');
+INSERT INTO `t_user` VALUES ('3', '12312312313', '123', '李四', '1000', '2018-05-06 21:16:14', null, '0', '1');
+INSERT INTO `t_user` VALUES ('4', '17826804000', '123', '王五', '1000', '2018-05-06 21:18:06', null, '0', '1');
+INSERT INTO `t_user` VALUES ('5', '17474847811', '123', '赵六', '1000', '2018-05-06 21:46:25', null, '0', '1');
+INSERT INTO `t_user` VALUES ('6', '12345678901', '123', '陈七', '1000', '2018-05-06 23:04:58', '2018-05-08 22:57:13', '0', '1');
+INSERT INTO `t_user` VALUES ('7', '12312312311', '123', '12312312311', '1000', '2018-05-08 22:56:32', '2018-05-08 22:58:47', '0', '1');
