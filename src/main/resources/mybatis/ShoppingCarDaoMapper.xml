@@ -13,12 +13,12 @@
         </if>
     </select>
 
-    <update id="updateAddress">
-        UPDATE t_address SET contacts = #{address.contacts},phone = #{address.phone},province = #{address.province},city = #{address.city},area = #{address.area},detail_address = #{address.detailAddress} WHERE id = #{address.id}
+    <update id="updateShoppingCar">
+        UPDATE t_shoppingcar SET goods_number = #{shoppingCar.goodsNumber} WHERE id = #{shoppingCar.id}
     </update>
 
-    <update id="deleteAddress">
-        UPDATE t_address SET is_delete = 1 WHERE id = #{id}
+    <update id="deleteShoppingCar">
+        UPDATE t_shoppingcar SET is_delete = 1 WHERE id = #{id}
     </update>
 
     <insert id="addShoppingCar">

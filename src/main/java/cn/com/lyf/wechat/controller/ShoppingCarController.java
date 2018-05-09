@@ -6,6 +6,7 @@ import cn.com.lyf.wechat.dto.ShoppingCarDto;
 import cn.com.lyf.wechat.entity.Commodity;
 import cn.com.lyf.wechat.entity.ShoppingCar;
 import cn.com.lyf.wechat.util.StaticOptionCode;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -28,7 +29,7 @@ public class ShoppingCarController {
     @Autowired
     private CommodityDao commodityDao;
     /*
-       查询所有地址
+       查询所有购物车
     */
     @RequestMapping(value = "/selectAllshoppingCar")
     @ResponseBody
@@ -41,6 +42,7 @@ public class ShoppingCarController {
         for(int i = 0;i<shoppingCarList.size();i++){
             Commodity commodity = commodityDao.selectCommodityById(shoppingCarList.get(i).getGoodsId());
             ShoppingCarDto shoppingCarDto = new ShoppingCarDto();
+            shoppingCarDto.setId(shoppingCarList.get(i).getId());
             shoppingCarDto.setGoodsId(shoppingCarList.get(i).getGoodsId());
             shoppingCarDto.setUserId(shoppingCarList.get(i).getUserId());
             shoppingCarDto.setGoodsNumber(shoppingCarList.get(i).getGoodsNumber());
@@ -74,6 +76,51 @@ public class ShoppingCarController {
             StaticOptionCode.setResult(jsonOut,18,"",false,"");
         }
 
+        return jsonOut;
+    }
+
+     /*
+        修改购物车商品数量
+    */
+     @RequestMapping(value = "/updateShoppingCar")
+     @ResponseBody
+     public JSONObject updateShoppingCar(HttpServletRequest request, @RequestBody String json) {
+         JSONObject jsonIn = JSONObject.parseObject(json);
+         JSONObject jsonOut = new JSONObject();
+         ShoppingCar shoppingCar = new ShoppingCar();
+         shoppingCar.setId(jsonIn.getIntValue("id"));
+         shoppingCar.setGoodsNumber(jsonIn.getIntValue("goodsNumber"));
+         try{
+             shoppingCarDao.updateShoppingCar(shoppingCar);
+             StaticOptionCode.setResult(jsonOut,13,"",true,"");
+         }
+         catch(Exception e) {
+             e.printStackTrace();
+             StaticOptionCode.setResult(jsonOut,14,"",false,"");
+         }
+         return jsonOut;
+     }
+
+    /*
+      修改购物车商品数量
+  */
+    @RequestMapping(value = "/deleteShoppingCar")
+    @ResponseBody
+    public JSONObject deleteShoppingCar(HttpServletRequest request, @RequestBody String json) {
+        JSONArray jsonIn = JSONArray.parseArray(json);
+        JSONObject jsonOut = new JSONObject();
+        for(int i = 0;i<jsonIn.size();i++){
+            JSONObject obj = jsonIn.getJSONObject(i);
+            try{
+                shoppingCarDao.deleteShoppingCar(obj.getIntValue("id"));
+                StaticOptionCode.setResult(jsonOut,15,"",true,"");
+            }
+            catch(Exception e) {
+                e.printStackTrace();
+                StaticOptionCode.setResult(jsonOut,16,"",false,"");
+            }
+        }
+//
         return jsonOut;
     }
 }

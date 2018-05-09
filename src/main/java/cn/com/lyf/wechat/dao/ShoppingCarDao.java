@@ -15,4 +15,9 @@ public interface ShoppingCarDao extends BaseMapper<ShoppingCar> {
     List<ShoppingCar> selectAllShoppingCar(@Param("userId") int userId);
 
     void addShoppingCar(@Param("shoppingCar") ShoppingCar shoppingCar);
+
+    void updateShoppingCar(@Param("shoppingCar") ShoppingCar shoppingCar);
+
+    void deleteShoppingCar(@Param("id") int id);
+
 }
