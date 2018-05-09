@@ -117,7 +117,7 @@ public class AddressController {
         return jsonOut;
     }
 
-    /**
+     /**
      * 通过地址id查询地址信息
      * @return
      */
@@ -156,4 +156,24 @@ public class AddressController {
         }
         return jsonOut;
      }
+
+    /**
+     * 通过用户id查询默认收货地址信息
+     * @return
+     */
+    @RequestMapping(value="/selectDefaultAddressByUserId")
+    @ResponseBody
+    public JSONObject selectDefaultAddressByUserId(HttpServletRequest request,@RequestBody String json){
+        JSONObject jsonIn = JSONObject.parseObject(json);
+        JSONObject jsonOut = new JSONObject();
+        int userId = jsonIn.getIntValue("userId");
+        try {
+            Address address = addressDao.selectDefaultAddressByUserId(userId);
+            StaticOptionCode.setResult(jsonOut,13,address,true,"");
+        } catch (Exception e) {
+            e.printStackTrace();
+            StaticOptionCode.setResult(jsonOut,14,"",true,"");
+        }
+        return jsonOut;
+    }
 }

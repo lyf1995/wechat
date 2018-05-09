@@ -23,4 +23,6 @@ public interface AddressDao extends BaseMapper<Address> {
     void updateAddress(@Param("address") Address address);
 
     void updateDefault(@Param("addressId")int addressId);
+
+    Address selectDefaultAddressByUserId(@Param("userId") int userId);
 }
