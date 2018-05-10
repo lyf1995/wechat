@@ -6,9 +6,19 @@ package cn.com.lyf.wechat.dto;
  */
 public class GoodsOrderDto {
     private int id;
+    private int orderId;
     private int goodsId;
     private int goodsNumber;
     private float goodsVipPrice;
+    private String goodsName;
+
+    public String getGoodsName() {
+        return goodsName;
+    }
+
+    public void setGoodsName(String goodsName) {
+        this.goodsName = goodsName;
+    }
 
     public int getId() {
         return id;
@@ -16,6 +26,14 @@ public class GoodsOrderDto {
 
     public void setId(int id) {
         this.id = id;
+    }
+
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
     }
 
     public int getGoodsId() {

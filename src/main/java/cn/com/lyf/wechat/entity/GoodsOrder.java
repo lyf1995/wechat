@@ -10,9 +10,19 @@ import java.io.Serializable;
 @TableName("t_goods_order")
 public class GoodsOrder implements Serializable {
     private int id;
+    private int orderId;
     private int goodsId;
     private int goodsNumber;
     private float goodsVipPrice;
+    private String goodsName;
+
+    public String getGoodsName() {
+        return goodsName;
+    }
+
+    public void setGoodsName(String goodsName) {
+        this.goodsName = goodsName;
+    }
 
     public int getId() {
         return id;
@@ -20,6 +30,13 @@ public class GoodsOrder implements Serializable {
 
     public void setId(int id) {
         this.id = id;
+    }
+    public int getOrderId() {
+        return orderId;
+    }
+
+    public void setOrderId(int orderId) {
+        this.orderId = orderId;
     }
 
     public int getGoodsId() {

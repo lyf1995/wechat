@@ -21,10 +21,10 @@
         UPDATE t_address SET is_delete = 1 WHERE id = #{id}
     </update>
 
-    <insert id="addAddress">
-        INSERT INTO t_address (contacts,phone,province,city,area,detail_address,is_default,user_id,is_delete)
+    <insert id="addGoodsOrder">
+        INSERT INTO t_goods_order (goods_id,order_id,goods_number,goods_vip_price,goods_name)
         VALUES
-        (#{address.contacts},#{address.phone},#{address.province},#{address.city},#{address.area},#{address.detailAddress},#{address.isDefault},#{address.userId},#{address.isDelete})
+        (#{goodsOrder.goodsId},#{goodsOrder.orderId},#{goodsOrder.goodsNumber},#{goodsOrder.goodsVipPrice},#{goodsOrder.goodsName})
     </insert>
 
     <update id="updateDefault">

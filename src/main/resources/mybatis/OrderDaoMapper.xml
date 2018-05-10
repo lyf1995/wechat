@@ -21,7 +21,7 @@
         UPDATE t_address SET is_delete = 1 WHERE id = #{id}
     </update>
 
-    <insert id="addOrder">
+    <insert id="addOrder" parameterType="cn.com.lyf.wechat.entity.Order" useGeneratedKeys="true" keyProperty="order.id" keyColumn="id">
         INSERT INTO t_order (number,status,user_id,address_id,total_amount,remarks,order_time,is_delete,type)
         VALUES
         (#{order.number},#{order.status},#{order.userId},#{order.addressId},#{order.totalAmount},#{order.remarks},#{order.orderTime},#{order.isDelete},#{order.type})

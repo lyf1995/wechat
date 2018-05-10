@@ -1,10 +1,13 @@
 package cn.com.lyf.wechat.controller;
 
+import cn.com.lyf.wechat.dao.GoodsOrderDao;
 import cn.com.lyf.wechat.dao.OrderDao;
 import cn.com.lyf.wechat.dao.UserDao;
+import cn.com.lyf.wechat.entity.GoodsOrder;
 import cn.com.lyf.wechat.entity.Order;
 import cn.com.lyf.wechat.entity.User;
 import cn.com.lyf.wechat.util.StaticOptionCode;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -25,6 +28,8 @@ public class OrderController {
     private OrderDao orderDao;
     @Autowired
     private UserDao userDao;
+    @Autowired
+    private GoodsOrderDao goodsOrderDao;
     /*
        添加地址
     */
@@ -33,23 +38,34 @@ public class OrderController {
     public JSONObject addAddress(HttpServletRequest request, @RequestBody String json) {
         JSONObject jsonIn = JSONObject.parseObject(json);
         JSONObject jsonOut = new JSONObject();
-        Order order = new Order();
-        order.setUserId(jsonIn.getIntValue("userId"));
-        order.setAddressId(jsonIn.getIntValue("addressId"));
-        order.setStatus(jsonIn.getIntValue("status"));
-        order.setTotalAmount(jsonIn.getFloatValue("totalAmount"));
-        order.setRemarks(jsonIn.getString("remarks"));
-        order.setNumber("lyf"+new Date().getTime());
-        order.setOrderTime(new Date());
-        order.setIsDelete(0);
-        order.setType(0);
-        if(jsonIn.getIntValue("status")==1){
-            User user = userDao.selectUserById(order.getUserId());
-            user.setMoney(user.getMoney()-order.getTotalAmount());
-            userDao.doOrder(user);
-        }
         try{
+            Order order = new Order();
+            order.setUserId(jsonIn.getIntValue("userId"));
+            order.setAddressId(jsonIn.getIntValue("addressId"));
+            order.setStatus(jsonIn.getIntValue("status"));
+            order.setTotalAmount(jsonIn.getFloatValue("totalAmount"));
+            order.setRemarks(jsonIn.getString("remarks"));
+            order.setNumber("lyf"+new Date().getTime());
+            order.setOrderTime(new Date());
+            order.setIsDelete(0);
+            order.setType(0);
+            if(jsonIn.getIntValue("status")==1){
+                User user = userDao.selectUserById(order.getUserId());
+                user.setMoney(user.getMoney()-order.getTotalAmount());
+                userDao.doOrder(user);
+            }
             orderDao.addOrder(order);
+            JSONArray goodsList = jsonIn.getJSONArray("goodsList");
+            for(int i =0;i<goodsList.size();i++){
+                JSONObject goods = goodsList.getJSONObject(i);
+                GoodsOrder goodsOrder = new GoodsOrder();
+                goodsOrder.setGoodsId(goods.getIntValue("productId"));
+                goodsOrder.setOrderId(order.getId());
+                goodsOrder.setGoodsNumber(goods.getIntValue("amount"));
+                goodsOrder.setGoodsName(goods.getString("productName"));
+                goodsOrder.setGoodsVipPrice(goods.getFloatValue("vipPrice"));
+                goodsOrderDao.addGoodsOrder(goodsOrder);
+            }
             StaticOptionCode.setResult(jsonOut,17,"",true,"");
         }catch (Exception e) {
             e.printStackTrace();
