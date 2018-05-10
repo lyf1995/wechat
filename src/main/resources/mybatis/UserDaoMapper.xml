@@ -9,6 +9,10 @@
 		select * from t_user where phone = #{phone} and is_delete = '0'
 	</select>
 
+	<select id="selectUserById" resultType="cn.com.lyf.wechat.entity.User">
+		select * from t_user where id = #{userId} and is_delete = '0'
+	</select>
+
 	<select id="selectAllUser" resultType="cn.com.lyf.wechat.entity.User">
 		select * from t_user u where is_delete = '0' and type = '1'
 		<if test="user.phone!=null and user.phone!=''">
@@ -41,6 +45,10 @@
 
 	<update id="updateUserById">
 		UPDATE t_user SET phone = #{user.phone},name = #{user.name},password = #{user.password} WHERE id = #{user.id}
+	</update>
+
+	<update id="doOrder">
+		UPDATE t_user SET money = #{user.money} WHERE id = #{user.id}
 	</update>
 
 	<update id="delectUser">

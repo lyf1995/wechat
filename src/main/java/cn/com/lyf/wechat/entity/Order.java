@@ -2,7 +2,7 @@ package cn.com.lyf.wechat.entity;
 
 import com.baomidou.mybatisplus.annotations.TableName;
 
-import java.sql.Date;
+import java.util.Date;
 
 /**
  * Created by Administrator on 2018/5/9 0009.
@@ -17,6 +17,15 @@ public class Order {
     private float totalAmount;
     private String remarks;
     private Date orderTime;
+    private int isDelete;
+
+    public int getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(int isDelete) {
+        this.isDelete = isDelete;
+    }
 
     public int getId() {
         return id;

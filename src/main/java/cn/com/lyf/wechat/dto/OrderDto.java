@@ -1,6 +1,6 @@
 package cn.com.lyf.wechat.dto;
 
-import java.sql.Date;
+import java.util.Date;
 
 /**
  * Created by Administrator on 2018/5/9 0009.
@@ -15,6 +15,15 @@ public class OrderDto {
     private String remarks;
     private Date orderTime;
     private int type;
+    private int isDelete;
+
+    public int getIsDelete() {
+        return isDelete;
+    }
+
+    public void setIsDelete(int isDelete) {
+        this.isDelete = isDelete;
+    }
 
     public int getId() {
         return id;

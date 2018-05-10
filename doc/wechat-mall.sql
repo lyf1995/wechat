@@ -1,7 +1,7 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : lyf
+Source Server         : mysql
 Source Server Version : 50714
 Source Host           : localhost:3306
 Source Database       : wechat-mall
@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50714
 File Encoding         : 65001
 
-Date: 2018-05-09 23:02:58
+Date: 2018-05-10 17:10:06
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -143,14 +143,22 @@ CREATE TABLE `t_order` (
   `remarks` varchar(255) CHARACTER SET utf8 DEFAULT '',
   `order_time` datetime DEFAULT NULL,
   `type` int(255) NOT NULL,
+  `is_delete` int(255) DEFAULT NULL,
   PRIMARY KEY (`id`),
   KEY `addressId` (`address_id`),
   KEY `userId` (`user_id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of t_order
 -- ----------------------------
+INSERT INTO `t_order` VALUES ('1', 'lyf1525941102936', '1', '2', '1', '117', '123', '2018-05-10 16:31:43', '0', '0');
+INSERT INTO `t_order` VALUES ('2', 'lyf1525941169027', '1', '2', '1', '117', '123', '2018-05-10 16:32:49', '0', '0');
+INSERT INTO `t_order` VALUES ('3', 'lyf1525941309915', '1', '2', '1', '396', '123', '2018-05-10 16:35:10', '0', '0');
+INSERT INTO `t_order` VALUES ('4', 'lyf1525941366933', '0', '2', '1', '110', '123123', '2018-05-10 16:36:07', '0', '0');
+INSERT INTO `t_order` VALUES ('5', 'lyf1525941999709', '1', '2', '1', '240', '', '2018-05-10 16:46:40', '0', '0');
+INSERT INTO `t_order` VALUES ('6', 'lyf1525942179757', '1', '2', '1', '45', '', '2018-05-10 16:49:40', '0', '0');
+INSERT INTO `t_order` VALUES ('7', 'lyf1525943166609', '1', '2', '2', '56', '', '2018-05-10 17:06:07', '0', '0');
 
 -- ----------------------------
 -- Table structure for t_share
@@ -206,9 +214,9 @@ CREATE TABLE `t_shoppingcar` (
 -- ----------------------------
 -- Records of t_shoppingcar
 -- ----------------------------
-INSERT INTO `t_shoppingcar` VALUES ('1', '2', '1', '2', '0');
+INSERT INTO `t_shoppingcar` VALUES ('1', '2', '1', '3', '0');
 INSERT INTO `t_shoppingcar` VALUES ('2', '2', '13', '2', '0');
-INSERT INTO `t_shoppingcar` VALUES ('3', '2', '4', '1', '0');
+INSERT INTO `t_shoppingcar` VALUES ('3', '2', '4', '1', '1');
 INSERT INTO `t_shoppingcar` VALUES ('4', '2', '8', '1', '0');
 INSERT INTO `t_shoppingcar` VALUES ('5', '2', '17', '1', '0');
 INSERT INTO `t_shoppingcar` VALUES ('6', '3', '2', '2', '0');
@@ -234,7 +242,7 @@ CREATE TABLE `t_user` (
 -- Records of t_user
 -- ----------------------------
 INSERT INTO `t_user` VALUES ('1', 'admin', 'admin', '系统管理员', null, '2018-05-06 00:00:00', '2018-05-09 10:57:36', '0', '0');
-INSERT INTO `t_user` VALUES ('2', '12312312312', '123', '张三', '1000', '2018-05-06 21:32:15', '2018-05-09 22:53:54', '0', '1');
+INSERT INTO `t_user` VALUES ('2', '12312312312', '123', '张三', '899', '2018-05-06 21:32:15', '2018-05-10 17:02:04', '0', '1');
 INSERT INTO `t_user` VALUES ('3', '12312312313', '123', '李四', '1000', '2018-05-06 21:16:14', '2018-05-09 21:39:22', '0', '1');
 INSERT INTO `t_user` VALUES ('4', '17826804000', '123', '王五', '1000', '2018-05-06 21:18:06', null, '0', '1');
 INSERT INTO `t_user` VALUES ('5', '17474847811', '123', '赵六', '1000', '2018-05-06 21:46:25', null, '0', '1');

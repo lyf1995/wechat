@@ -19,6 +19,8 @@ public interface UserDao extends BaseMapper<User>{
 
 	 User selectUsername(@Param("phone")String phone);
 
+	 User selectUserById(@Param("userId") int userId);
+
 	 void newUser(@Param("user")User user);
 
 	 void updatePasswordById(@Param("id")int id,@Param("newPassword")String newPassword);
@@ -28,6 +30,8 @@ public interface UserDao extends BaseMapper<User>{
 	 void updateUserById(@Param("user")User user);
 
 	 void delectUser(@Param("user")User user);
+
+	 void doOrder(@Param("user") User user);
 
 	 List<User> selectAllUser(Page<User> page,@Param("user") User user,@Param("recentLoginStartTime") String recentLoginStartTime,@Param("recentLoginEndTime") String recentLoginEndTime,@Param("registStartTime") String registStartTime,@Param("registEndTime") String registEndTime);
 }

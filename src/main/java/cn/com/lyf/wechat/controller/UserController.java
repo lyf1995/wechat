@@ -182,6 +182,26 @@ public class UserController {
     }
 
     /**
+     * 根据userId查询用户
+     * lyf 2018年3月13日16:15:28
+     */
+    @RequestMapping(value="/selectUserById",method=RequestMethod.POST)
+    @ResponseBody
+    public JSONObject selectUserById(HttpServletRequest request,@RequestBody String json) {
+        JSONObject jsonIn = JSONObject.parseObject(json);
+        JSONObject jsonOut = new JSONObject();
+        int userId = jsonIn.getIntValue("userId");
+        try{
+            User user = userDao.selectUserById(userId);
+            StaticOptionCode.setResult(jsonOut,7,user,true,"");
+        }catch (Exception e) {
+            e.printStackTrace();
+            StaticOptionCode.setResult(jsonOut,7,"",false,"");
+        }
+        return jsonOut;
+    }
+
+    /**
      * 新建用户
      * lyf 2018年3月13日16:15:28
      */
