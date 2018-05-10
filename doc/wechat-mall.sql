@@ -1,7 +1,7 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : mysql
+Source Server         : lyf
 Source Server Version : 50714
 Source Host           : localhost:3306
 Source Database       : wechat-mall
@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50714
 File Encoding         : 65001
 
-Date: 2018-05-10 17:10:06
+Date: 2018-05-10 23:12:05
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -95,17 +95,20 @@ INSERT INTO `t_goods` VALUES ('23', '测试商品2', '117', '139', '这是导入
 -- ----------------------------
 DROP TABLE IF EXISTS `t_goods_order`;
 CREATE TABLE `t_goods_order` (
-  `id` int(11) NOT NULL,
+  `id` int(11) NOT NULL AUTO_INCREMENT,
   `goods_id` int(11) NOT NULL,
   `order_id` int(11) NOT NULL,
   `goods_number` int(11) DEFAULT NULL,
-  `goods_vip_price` float DEFAULT NULL,
+  `goods_vip_price` float(255,0) DEFAULT NULL,
+  `goods_name` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of t_goods_order
 -- ----------------------------
+INSERT INTO `t_goods_order` VALUES ('1', '7', '35', '1', '198', '浙江象山红美人柑橘--T15 （ 15颗/盒）');
+INSERT INTO `t_goods_order` VALUES ('2', '3', '36', '1', '110', '冰岛Clearice大西洋鳕鱼(去皮4段) 560G/袋');
 
 -- ----------------------------
 -- Table structure for t_goods_type
@@ -135,7 +138,7 @@ INSERT INTO `t_goods_type` VALUES ('6', 'test2', 'test2分类', '1');
 DROP TABLE IF EXISTS `t_order`;
 CREATE TABLE `t_order` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
-  `number` varchar(255) CHARACTER SET utf8 DEFAULT '',
+  `number` varchar(255) CHARACTER SET utf8 NOT NULL DEFAULT '',
   `status` varchar(255) CHARACTER SET utf8 DEFAULT '',
   `user_id` int(11) NOT NULL,
   `address_id` int(11) NOT NULL,
@@ -147,18 +150,13 @@ CREATE TABLE `t_order` (
   PRIMARY KEY (`id`),
   KEY `addressId` (`address_id`),
   KEY `userId` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=8 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=37 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of t_order
 -- ----------------------------
-INSERT INTO `t_order` VALUES ('1', 'lyf1525941102936', '1', '2', '1', '117', '123', '2018-05-10 16:31:43', '0', '0');
-INSERT INTO `t_order` VALUES ('2', 'lyf1525941169027', '1', '2', '1', '117', '123', '2018-05-10 16:32:49', '0', '0');
-INSERT INTO `t_order` VALUES ('3', 'lyf1525941309915', '1', '2', '1', '396', '123', '2018-05-10 16:35:10', '0', '0');
-INSERT INTO `t_order` VALUES ('4', 'lyf1525941366933', '0', '2', '1', '110', '123123', '2018-05-10 16:36:07', '0', '0');
-INSERT INTO `t_order` VALUES ('5', 'lyf1525941999709', '1', '2', '1', '240', '', '2018-05-10 16:46:40', '0', '0');
-INSERT INTO `t_order` VALUES ('6', 'lyf1525942179757', '1', '2', '1', '45', '', '2018-05-10 16:49:40', '0', '0');
-INSERT INTO `t_order` VALUES ('7', 'lyf1525943166609', '1', '2', '2', '56', '', '2018-05-10 17:06:07', '0', '0');
+INSERT INTO `t_order` VALUES ('36', 'lyf1525964971657', '1', '2', '1', '110', '', '2018-05-10 23:09:32', '0', '0');
+INSERT INTO `t_order` VALUES ('35', 'lyf1525964936657', '1', '2', '1', '198', '', '2018-05-10 23:08:57', '0', '0');
 
 -- ----------------------------
 -- Table structure for t_share
@@ -242,7 +240,7 @@ CREATE TABLE `t_user` (
 -- Records of t_user
 -- ----------------------------
 INSERT INTO `t_user` VALUES ('1', 'admin', 'admin', '系统管理员', null, '2018-05-06 00:00:00', '2018-05-09 10:57:36', '0', '0');
-INSERT INTO `t_user` VALUES ('2', '12312312312', '123', '张三', '899', '2018-05-06 21:32:15', '2018-05-10 17:02:04', '0', '1');
+INSERT INTO `t_user` VALUES ('2', '12312312312', '123', '张三', '-3724', '2018-05-06 21:32:15', '2018-05-10 21:10:10', '0', '1');
 INSERT INTO `t_user` VALUES ('3', '12312312313', '123', '李四', '1000', '2018-05-06 21:16:14', '2018-05-09 21:39:22', '0', '1');
 INSERT INTO `t_user` VALUES ('4', '17826804000', '123', '王五', '1000', '2018-05-06 21:18:06', null, '0', '1');
 INSERT INTO `t_user` VALUES ('5', '17474847811', '123', '赵六', '1000', '2018-05-06 21:46:25', null, '0', '1');
