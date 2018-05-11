@@ -2,6 +2,7 @@ package cn.com.lyf.wechat.dao;
 
 import cn.com.lyf.wechat.entity.Order;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -20,4 +21,6 @@ public interface OrderDao extends BaseMapper<Order> {
     void changeOrderStatus(@Param("id") int id, @Param("status") int status);
 
     Order selectOrderById(@Param("id") int id);
+
+    List<Order> selectAllOrder(@Param("page") Page<Order> page, @Param("number") int number, @Param("status") int status, @Param("orderStartTime") String orderStartTime,@Param("orderEndTime") String orderEndTime);
 }

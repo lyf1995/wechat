@@ -9,9 +9,11 @@ import cn.com.lyf.wechat.entity.Address;
 import cn.com.lyf.wechat.entity.GoodsOrder;
 import cn.com.lyf.wechat.entity.Order;
 import cn.com.lyf.wechat.entity.User;
+import cn.com.lyf.wechat.service.OrderService;
 import cn.com.lyf.wechat.util.StaticOptionCode;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
+import com.baomidou.mybatisplus.plugins.Page;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -35,6 +37,36 @@ public class OrderController {
     private GoodsOrderDao goodsOrderDao;
     @Autowired
     private AddressDao addressDao;
+    @Autowired
+    private OrderService orderService;
+
+
+    /*
+       分页查询订单信息
+    */
+    @RequestMapping(value = "/selectAllOrder")
+    @ResponseBody
+    public JSONObject selectAllOrder(HttpServletRequest request, @RequestBody String json) {
+        JSONObject jsonIn = JSONObject.parseObject(json);
+        JSONObject jsonOut = new JSONObject();
+        Integer pageIndex=jsonIn.getInteger("pageIndex");
+        Integer pageSize=jsonIn.getInteger("pageSize");
+        int number = jsonIn.getIntValue("number");
+        int status = jsonIn.getIntValue("status");
+        String userName = jsonIn.getString("userName");
+        String orderStartTime = jsonIn.getString("orderStartTime");
+        String orderEndTime = jsonIn.getString("orderEndTime");
+        try {
+            Page<Order> page = new Page<Order>(pageIndex,pageSize);
+            page= orderService.selectAllOrder(page, number,status,orderStartTime,orderEndTime);
+            StaticOptionCode.setResult(jsonOut,9,page.getRecords(),true,""+page.getTotal());
+        } catch (Exception e) {
+            e.printStackTrace();
+            StaticOptionCode.setResult(jsonOut,10,"",false,"");
+        }
+        return jsonOut;
+    }
+
 
     /*
        根据用户id查看用户所有订单
