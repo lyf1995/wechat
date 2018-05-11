@@ -1,6 +1,12 @@
 package cn.com.lyf.wechat.dto;
 
+import cn.com.lyf.wechat.entity.Address;
+import cn.com.lyf.wechat.entity.GoodsOrder;
+
+import java.lang.reflect.Array;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 /**
  * Created by Administrator on 2018/5/9 0009.
@@ -16,6 +22,24 @@ public class OrderDto {
     private Date orderTime;
     private int type;
     private int isDelete;
+    private List<GoodsOrder> productsList;
+    private Address address;
+
+    public Address getAddress() {
+        return address;
+    }
+
+    public void setAddress(Address address) {
+        this.address = address;
+    }
+
+    public List<GoodsOrder> getProductsList() {
+        return productsList;
+    }
+
+    public void setProductsList(List<GoodsOrder> productsList) {
+        this.productsList = productsList;
+    }
 
     public int getIsDelete() {
         return isDelete;

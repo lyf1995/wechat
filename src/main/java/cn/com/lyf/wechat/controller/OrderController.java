@@ -1,8 +1,11 @@
 package cn.com.lyf.wechat.controller;
 
+import cn.com.lyf.wechat.dao.AddressDao;
 import cn.com.lyf.wechat.dao.GoodsOrderDao;
 import cn.com.lyf.wechat.dao.OrderDao;
 import cn.com.lyf.wechat.dao.UserDao;
+import cn.com.lyf.wechat.dto.OrderDto;
+import cn.com.lyf.wechat.entity.Address;
 import cn.com.lyf.wechat.entity.GoodsOrder;
 import cn.com.lyf.wechat.entity.Order;
 import cn.com.lyf.wechat.entity.User;
@@ -30,8 +33,49 @@ public class OrderController {
     private UserDao userDao;
     @Autowired
     private GoodsOrderDao goodsOrderDao;
+    @Autowired
+    private AddressDao addressDao;
+
     /*
-       添加地址
+       根据用户id查看用户所有订单
+    */
+    @RequestMapping(value = "/selectOrderByUserId")
+    @ResponseBody
+    public JSONObject selectOrderByUserId(HttpServletRequest request, @RequestBody String json) {
+        JSONObject jsonIn = JSONObject.parseObject(json);
+        JSONObject jsonOut = new JSONObject();
+        int userId = jsonIn.getIntValue("userId");
+        int status = jsonIn.getIntValue("status");
+        try{
+            List<Order> orderList = orderDao.selectOrderByUserId(userId,status);
+            List<OrderDto> orderDtoList = new ArrayList<>();
+            for(int i = 0;i < orderList.size();i ++){
+                List<GoodsOrder> goodsOrderList = goodsOrderDao.selectGoodsOrderByOrderId(orderList.get(i).getId());
+                OrderDto orderDto = new OrderDto();
+                orderDto.setId(orderList.get(i).getId());
+                orderDto.setNumber(orderList.get(i).getNumber());
+                orderDto.setStatus(orderList.get(i).getStatus());
+                orderDto.setUserId(orderList.get(i).getUserId());
+                orderDto.setAddressId(orderList.get(i).getAddressId());
+                orderDto.setTotalAmount(orderList.get(i).getTotalAmount());
+                orderDto.setRemarks(orderList.get(i).getRemarks());
+                orderDto.setOrderTime(orderList.get(i).getOrderTime());
+                orderDto.setProductsList(goodsOrderList);
+                orderDtoList.add(orderDto);
+            }
+            StaticOptionCode.setResult(jsonOut,9,orderDtoList,true,"");
+        }catch (Exception e) {
+            e.printStackTrace();
+            StaticOptionCode.setResult(jsonOut, 10, "", false, "");
+        }
+        return jsonOut;
+    }
+
+
+
+
+    /*
+       下单
     */
     @RequestMapping(value = "/addOrder")
     @ResponseBody
@@ -64,6 +108,7 @@ public class OrderController {
                 goodsOrder.setGoodsNumber(goods.getIntValue("amount"));
                 goodsOrder.setGoodsName(goods.getString("productName"));
                 goodsOrder.setGoodsVipPrice(goods.getFloatValue("vipPrice"));
+                goodsOrder.setGoodsMainImage(goods.getString("mainImg"));
                 goodsOrderDao.addGoodsOrder(goodsOrder);
             }
             StaticOptionCode.setResult(jsonOut,17,"",true,"");
@@ -72,6 +117,86 @@ public class OrderController {
             StaticOptionCode.setResult(jsonOut,18,"",false,"");
         }
 
+        return jsonOut;
+    }
+
+    /*
+      删除订单
+   */
+    @RequestMapping(value = "/deleteOrder")
+    @ResponseBody
+    public JSONObject deleteOrder(HttpServletRequest request, @RequestBody String json) {
+        JSONObject jsonIn = JSONObject.parseObject(json);
+        JSONObject jsonOut = new JSONObject();
+        int id = jsonIn.getIntValue("id");
+        try{
+            orderDao.deleteOrder(id);
+            StaticOptionCode.setResult(jsonOut,18,"",true,"");
+        }catch (Exception e) {
+            e.printStackTrace();
+            StaticOptionCode.setResult(jsonOut,18,"",false,"");
+        }
+        return jsonOut;
+    }
+
+    /*
+      修改订单状态
+   */
+    @RequestMapping(value = "/changeOrderStatus")
+    @ResponseBody
+    public JSONObject changeOrderStatus(HttpServletRequest request, @RequestBody String json) {
+        JSONObject jsonIn = JSONObject.parseObject(json);
+        JSONObject jsonOut = new JSONObject();
+        int id = jsonIn.getIntValue("id");
+        int status = jsonIn.getIntValue("status");
+
+        if(jsonIn.getIntValue("status")==1){
+            Order order = orderDao.selectOrderById(id);
+            User user = userDao.selectUserById(order.getUserId());
+            user.setMoney(user.getMoney()-order.getTotalAmount());
+            userDao.doOrder(user);
+        }
+        try{
+            orderDao.changeOrderStatus(id,status);
+            StaticOptionCode.setResult(jsonOut,18,"",true,"");
+        }catch (Exception e) {
+            e.printStackTrace();
+            StaticOptionCode.setResult(jsonOut,18,"",false,"");
+        }
+        return jsonOut;
+    }
+
+    /*
+      根据id查看订单
+   */
+    @RequestMapping(value = "/selectOrderById")
+    @ResponseBody
+    public JSONObject selectOrderById(HttpServletRequest request, @RequestBody String json) {
+        JSONObject jsonIn = JSONObject.parseObject(json);
+        JSONObject jsonOut = new JSONObject();
+        int id = jsonIn.getIntValue("id");
+        try{
+            Order order = orderDao.selectOrderById(id);
+            OrderDto orderDto = new OrderDto();
+            orderDto.setId(order.getId());
+            orderDto.setNumber(order.getNumber());
+            orderDto.setStatus(order.getStatus());
+            orderDto.setUserId(order.getUserId());
+            orderDto.setAddressId(order.getAddressId());
+            orderDto.setTotalAmount(order.getTotalAmount());
+            orderDto.setRemarks(order.getRemarks());
+            orderDto.setOrderTime(order.getOrderTime());
+            orderDto.setType(order.getType());
+            orderDto.setIsDelete(order.getIsDelete());
+            List<GoodsOrder> goodsOrderList = goodsOrderDao.selectGoodsOrderByOrderId(orderDto.getId());
+            orderDto.setProductsList(goodsOrderList);
+            Address address = addressDao.selectAddressById(orderDto.getAddressId());
+            orderDto.setAddress(address);
+            StaticOptionCode.setResult(jsonOut,18,orderDto,true,"");
+        }catch (Exception e) {
+            e.printStackTrace();
+            StaticOptionCode.setResult(jsonOut,18,"",false,"");
+        }
         return jsonOut;
     }
 }

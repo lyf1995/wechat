@@ -2,8 +2,8 @@
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
 <mapper namespace="cn.com.lyf.wechat.dao.GoodsOrderDao">
 
-    <select id="selectAddressById" resultType="cn.com.lyf.wechat.entity.GoodsOrder">
-        select * from t_address where id = #{addressId} and is_delete = '0'
+    <select id="selectGoodsOrderByOrderId" resultType="cn.com.lyf.wechat.entity.GoodsOrder">
+        select * from t_goods_order where order_id = #{orderId}
     </select>
 
     <select id="selectAllAddress" resultType="cn.com.lyf.wechat.entity.GoodsOrder">
@@ -13,21 +13,21 @@
         </if>
     </select>
 
-    <update id="updateAddress">
-        UPDATE t_address SET contacts = #{address.contacts},phone = #{address.phone},province = #{address.province},city = #{address.city},area = #{address.area},detail_address = #{address.detailAddress} WHERE id = #{address.id}
-    </update>
+    <!--<update id="updateAddress">-->
+        <!--UPDATE t_address SET contacts = #{address.contacts},phone = #{address.phone},province = #{address.province},city = #{address.city},area = #{address.area},detail_address = #{address.detailAddress} WHERE id = #{address.id}-->
+    <!--</update>-->
 
-    <update id="deleteAddress">
-        UPDATE t_address SET is_delete = 1 WHERE id = #{id}
-    </update>
+    <!--<update id="deleteAddress">-->
+        <!--UPDATE t_address SET is_delete = 1 WHERE id = #{id}-->
+    <!--</update>-->
 
     <insert id="addGoodsOrder">
-        INSERT INTO t_goods_order (goods_id,order_id,goods_number,goods_vip_price,goods_name)
+        INSERT INTO t_goods_order (goods_id,order_id,goods_number,goods_vip_price,goods_name,goods_main_image)
         VALUES
-        (#{goodsOrder.goodsId},#{goodsOrder.orderId},#{goodsOrder.goodsNumber},#{goodsOrder.goodsVipPrice},#{goodsOrder.goodsName})
+        (#{goodsOrder.goodsId},#{goodsOrder.orderId},#{goodsOrder.goodsNumber},#{goodsOrder.goodsVipPrice},#{goodsOrder.goodsName},#{goodsOrder.goodsMainImage})
     </insert>
 
-    <update id="updateDefault">
-        UPDATE t_address SET is_default = 1 WHERE id = #{addressId}
-    </update>
+    <!--<update id="updateDefault">-->
+        <!--UPDATE t_address SET is_default = 1 WHERE id = #{addressId}-->
+    <!--</update>-->
 </mapper>

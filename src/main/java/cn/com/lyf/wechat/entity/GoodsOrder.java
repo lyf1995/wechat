@@ -15,6 +15,15 @@ public class GoodsOrder implements Serializable {
     private int goodsNumber;
     private float goodsVipPrice;
     private String goodsName;
+    private String goodsMainImage;
+
+    public String getGoodsMainImage() {
+        return goodsMainImage;
+    }
+
+    public void setGoodsMainImage(String goodsMainImage) {
+        this.goodsMainImage = goodsMainImage;
+    }
 
     public String getGoodsName() {
         return goodsName;

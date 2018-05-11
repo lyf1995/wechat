@@ -1,7 +1,7 @@
 /*
 Navicat MySQL Data Transfer
 
-Source Server         : lyf
+Source Server         : mysql
 Source Server Version : 50714
 Source Host           : localhost:3306
 Source Database       : wechat-mall
@@ -10,7 +10,7 @@ Target Server Type    : MYSQL
 Target Server Version : 50714
 File Encoding         : 65001
 
-Date: 2018-05-10 23:12:05
+Date: 2018-05-11 17:33:45
 */
 
 SET FOREIGN_KEY_CHECKS=0;
@@ -101,14 +101,23 @@ CREATE TABLE `t_goods_order` (
   `goods_number` int(11) DEFAULT NULL,
   `goods_vip_price` float(255,0) DEFAULT NULL,
   `goods_name` varchar(255) CHARACTER SET utf8 DEFAULT NULL,
+  `goods_main_image` varchar(255) DEFAULT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=MyISAM AUTO_INCREMENT=3 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=11 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of t_goods_order
 -- ----------------------------
-INSERT INTO `t_goods_order` VALUES ('1', '7', '35', '1', '198', '浙江象山红美人柑橘--T15 （ 15颗/盒）');
-INSERT INTO `t_goods_order` VALUES ('2', '3', '36', '1', '110', '冰岛Clearice大西洋鳕鱼(去皮4段) 560G/袋');
+INSERT INTO `t_goods_order` VALUES ('1', '7', '35', '1', '198', '浙江象山红美人柑橘--T15 （ 15颗/盒）', null);
+INSERT INTO `t_goods_order` VALUES ('2', '3', '36', '1', '110', '冰岛Clearice大西洋鳕鱼(去皮4段) 560G/袋', null);
+INSERT INTO `t_goods_order` VALUES ('3', '1', '37', '2', '120', '智利泰瑞贵族珍藏佳美娜干红葡萄酒750mL', null);
+INSERT INTO `t_goods_order` VALUES ('4', '13', '38', '2', '28', '禾然 素食佐餐酱210g', null);
+INSERT INTO `t_goods_order` VALUES ('5', '8', '38', '1', '15', '永沁精选 花生牛轧糖150g/袋（分享装）', null);
+INSERT INTO `t_goods_order` VALUES ('6', '19', '39', '1', '360', '智利泰瑞贵族窖藏CA2号干红葡萄酒750ml', null);
+INSERT INTO `t_goods_order` VALUES ('7', '5', '39', '1', '69', '新西兰 冷冻鲽鱼（盾吻鲽） 1kg/袋', null);
+INSERT INTO `t_goods_order` VALUES ('8', '2', '41', '1', '117', '乌拉圭原装进口牛腱子 (1.6-1.8KG/块)', null);
+INSERT INTO `t_goods_order` VALUES ('9', '8', '42', '1', '15', '永沁精选 花生牛轧糖150g/袋（分享装）', null);
+INSERT INTO `t_goods_order` VALUES ('10', '17', '42', '2', '120', '智利泰瑞贵族珍藏佳美娜干红葡萄酒750mL', null);
 
 -- ----------------------------
 -- Table structure for t_goods_type
@@ -139,7 +148,7 @@ DROP TABLE IF EXISTS `t_order`;
 CREATE TABLE `t_order` (
   `id` int(11) NOT NULL AUTO_INCREMENT,
   `number` varchar(255) CHARACTER SET utf8 NOT NULL DEFAULT '',
-  `status` varchar(255) CHARACTER SET utf8 DEFAULT '',
+  `status` varchar(255) CHARACTER SET utf8 DEFAULT '' COMMENT '0-未付款，1-待发货，2-待收货，3-已完成，4-已取消',
   `user_id` int(11) NOT NULL,
   `address_id` int(11) NOT NULL,
   `total_amount` float(255,0) DEFAULT NULL,
@@ -150,13 +159,18 @@ CREATE TABLE `t_order` (
   PRIMARY KEY (`id`),
   KEY `addressId` (`address_id`),
   KEY `userId` (`user_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=37 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=43 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of t_order
 -- ----------------------------
-INSERT INTO `t_order` VALUES ('36', 'lyf1525964971657', '1', '2', '1', '110', '', '2018-05-10 23:09:32', '0', '0');
+INSERT INTO `t_order` VALUES ('36', 'lyf1525964971657', '0', '2', '1', '110', '', '2018-05-10 23:09:32', '0', '0');
 INSERT INTO `t_order` VALUES ('35', 'lyf1525964936657', '1', '2', '1', '198', '', '2018-05-10 23:08:57', '0', '0');
+INSERT INTO `t_order` VALUES ('37', 'lyf1526003636004', '4', '2', '1', '240', '123', '2018-05-11 09:53:56', '0', '0');
+INSERT INTO `t_order` VALUES ('38', 'lyf1526004781097', '2', '2', '2', '71', '', '2018-05-11 10:13:01', '0', '0');
+INSERT INTO `t_order` VALUES ('39', 'lyf1526006166827', '3', '2', '1', '429', '', '2018-05-11 10:36:07', '0', '0');
+INSERT INTO `t_order` VALUES ('41', 'lyf1526023257852', '2', '2', '1', '117', '', '2018-05-11 15:20:58', '0', '0');
+INSERT INTO `t_order` VALUES ('42', 'lyf1526024005854', '1', '2', '2', '255', '', '2018-05-11 15:33:26', '0', '0');
 
 -- ----------------------------
 -- Table structure for t_share
@@ -207,17 +221,24 @@ CREATE TABLE `t_shoppingcar` (
   PRIMARY KEY (`id`),
   KEY `userId` (`user_id`),
   KEY `goodsId` (`goods_id`)
-) ENGINE=MyISAM AUTO_INCREMENT=7 DEFAULT CHARSET=latin1;
+) ENGINE=MyISAM AUTO_INCREMENT=14 DEFAULT CHARSET=latin1;
 
 -- ----------------------------
 -- Records of t_shoppingcar
 -- ----------------------------
 INSERT INTO `t_shoppingcar` VALUES ('1', '2', '1', '3', '0');
-INSERT INTO `t_shoppingcar` VALUES ('2', '2', '13', '2', '0');
+INSERT INTO `t_shoppingcar` VALUES ('2', '2', '13', '2', '1');
 INSERT INTO `t_shoppingcar` VALUES ('3', '2', '4', '1', '1');
-INSERT INTO `t_shoppingcar` VALUES ('4', '2', '8', '1', '0');
-INSERT INTO `t_shoppingcar` VALUES ('5', '2', '17', '1', '0');
+INSERT INTO `t_shoppingcar` VALUES ('4', '2', '8', '1', '1');
+INSERT INTO `t_shoppingcar` VALUES ('5', '2', '17', '2', '1');
 INSERT INTO `t_shoppingcar` VALUES ('6', '3', '2', '2', '0');
+INSERT INTO `t_shoppingcar` VALUES ('7', '2', '8', '1', '1');
+INSERT INTO `t_shoppingcar` VALUES ('8', '2', '17', '4', '1');
+INSERT INTO `t_shoppingcar` VALUES ('9', '2', '7', '1', '0');
+INSERT INTO `t_shoppingcar` VALUES ('10', '2', '5', '1', '1');
+INSERT INTO `t_shoppingcar` VALUES ('11', '2', '19', '1', '1');
+INSERT INTO `t_shoppingcar` VALUES ('12', '2', '7', '2', '0');
+INSERT INTO `t_shoppingcar` VALUES ('13', '2', '13', '2', '0');
 
 -- ----------------------------
 -- Table structure for t_user
@@ -240,7 +261,7 @@ CREATE TABLE `t_user` (
 -- Records of t_user
 -- ----------------------------
 INSERT INTO `t_user` VALUES ('1', 'admin', 'admin', '系统管理员', null, '2018-05-06 00:00:00', '2018-05-09 10:57:36', '0', '0');
-INSERT INTO `t_user` VALUES ('2', '12312312312', '123', '张三', '-3724', '2018-05-06 21:32:15', '2018-05-10 21:10:10', '0', '1');
+INSERT INTO `t_user` VALUES ('2', '12312312312', '123', '张三', '99890', '2018-05-06 21:32:15', '2018-05-11 17:29:26', '0', '1');
 INSERT INTO `t_user` VALUES ('3', '12312312313', '123', '李四', '1000', '2018-05-06 21:16:14', '2018-05-09 21:39:22', '0', '1');
 INSERT INTO `t_user` VALUES ('4', '17826804000', '123', '王五', '1000', '2018-05-06 21:18:06', null, '0', '1');
 INSERT INTO `t_user` VALUES ('5', '17474847811', '123', '赵六', '1000', '2018-05-06 21:46:25', null, '0', '1');
