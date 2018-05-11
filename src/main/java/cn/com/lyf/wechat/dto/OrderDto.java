@@ -16,6 +16,7 @@ public class OrderDto {
     private String number;
     private int status;
     private int userId;
+    private String phone;
     private int addressId;
     private float totalAmount;
     private String remarks;
@@ -25,6 +26,13 @@ public class OrderDto {
     private List<GoodsOrder> productsList;
     private Address address;
 
+    public String getPhone() {
+        return phone;
+    }
+
+    public void setPhone(String phone) {
+        this.phone = phone;
+    }
     public Address getAddress() {
         return address;
     }

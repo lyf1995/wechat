@@ -51,15 +51,47 @@ public class OrderController {
         JSONObject jsonOut = new JSONObject();
         Integer pageIndex=jsonIn.getInteger("pageIndex");
         Integer pageSize=jsonIn.getInteger("pageSize");
-        int number = jsonIn.getIntValue("number");
-        int status = jsonIn.getIntValue("status");
-        String userName = jsonIn.getString("userName");
+        Order order = new Order();
+        order.setNumber(jsonIn.getString("number").equals("")?null:jsonIn.getString("number"));
+        if (!(jsonIn.getString("status").equals(""))){
+            order.setStatus(jsonIn.getIntValue("status"));
+        }
+        String phone = jsonIn.getString("phone").equals("")?null:jsonIn.getString("phone");
+        if(phone!=null){
+            User user = userDao.selectUsername(phone);
+            order.setUserId(user.getId());
+        }
         String orderStartTime = jsonIn.getString("orderStartTime");
         String orderEndTime = jsonIn.getString("orderEndTime");
         try {
             Page<Order> page = new Page<Order>(pageIndex,pageSize);
-            page= orderService.selectAllOrder(page, number,status,orderStartTime,orderEndTime);
-            StaticOptionCode.setResult(jsonOut,9,page.getRecords(),true,""+page.getTotal());
+            page= orderService.selectAllOrder(page,order,orderStartTime,orderEndTime);
+            List<OrderDto> orderDtoList = new ArrayList<>();
+            for(int i = 0; i<page.getRecords().size();i++){
+                OrderDto orderDto = new OrderDto();
+                orderDto.setId(page.getRecords().get(i).getId());
+                orderDto.setNumber(page.getRecords().get(i).getNumber());
+                orderDto.setStatus(page.getRecords().get(i).getStatus());
+                orderDto.setTotalAmount(page.getRecords().get(i).getTotalAmount());
+                orderDto.setRemarks(page.getRecords().get(i).getRemarks());
+                orderDto.setOrderTime(page.getRecords().get(i).getOrderTime());
+                orderDto.setUserId(page.getRecords().get(i).getUserId());
+                orderDto.setAddressId(page.getRecords().get(i).getAddressId());
+
+                int userId = page.getRecords().get(i).getUserId();
+                User user = userDao.selectUserById(userId);
+                orderDto.setPhone(user.getPhone());
+
+                int addressId = page.getRecords().get(i).getAddressId();
+                Address address = addressDao.selectAddressById(addressId);
+                orderDto.setAddress(address);
+
+                List<GoodsOrder> productsList = goodsOrderDao.selectGoodsOrderByOrderId(page.getRecords().get(i).getId());
+                orderDto.setProductsList(productsList);
+
+                orderDtoList.add(orderDto);
+            }
+            StaticOptionCode.setResult(jsonOut,9,orderDtoList,true,""+page.getTotal());
         } catch (Exception e) {
             e.printStackTrace();
             StaticOptionCode.setResult(jsonOut,10,"",false,"");

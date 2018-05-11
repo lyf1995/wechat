@@ -17,8 +17,8 @@ public class OrderServiceImpl extends ServiceImpl<OrderDao, Order> implements Or
     @Autowired
     private OrderDao orderDao;
     @Override
-    public Page<Order> selectAllOrder(Page<Order> page ,int number, int status, String orderStartTime, String orderEndTime) {
-        List<Order> liste = orderDao.selectAllOrder(page,number,status,orderStartTime,orderEndTime);
+    public Page<Order> selectAllOrder(Page<Order> page ,Order order, String orderStartTime, String orderEndTime) {
+        List<Order> liste = orderDao.selectAllOrder(page,order,orderStartTime,orderEndTime);
         page.setRecords(liste);
         return page;
     }

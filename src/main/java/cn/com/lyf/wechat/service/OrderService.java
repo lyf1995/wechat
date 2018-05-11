@@ -8,5 +8,5 @@ import com.baomidou.mybatisplus.service.IService;
  * Created by Administrator on 2018/5/10.
  */
 public interface OrderService extends IService<Order> {
-    Page<Order> selectAllOrder(Page<Order> page, int number, int status, String orderStartTime, String orderEndTime);
+    Page<Order> selectAllOrder(Page<Order> page, Order order, String orderStartTime, String orderEndTime);
 }

@@ -22,5 +22,5 @@ public interface OrderDao extends BaseMapper<Order> {
 
     Order selectOrderById(@Param("id") int id);
 
-    List<Order> selectAllOrder(@Param("page") Page<Order> page, @Param("number") int number, @Param("status") int status, @Param("orderStartTime") String orderStartTime,@Param("orderEndTime") String orderEndTime);
+    List<Order> selectAllOrder(@Param("page") Page<Order> page,@Param("order") Order order,@Param("orderStartTime") String orderStartTime,@Param("orderEndTime") String orderEndTime);
 }
