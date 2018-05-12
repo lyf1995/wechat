@@ -172,10 +172,10 @@ public class OrderController {
                 goodsOrder.setGoodsNumber(goods.getIntValue("amount"));
                 goodsOrder.setGoodsName(goods.getString("productName"));
                 goodsOrder.setGoodsVipPrice(goods.getFloatValue("vipPrice"));
-                goodsOrder.setGoodsMainImage(goods.getString("mainImg"));
+                goodsOrder.setGoodsMainImage(goods.getString("mainImage"));
                 goodsOrderDao.addGoodsOrder(goodsOrder);
             }
-            StaticOptionCode.setResult(jsonOut,17,"",true,"");
+            StaticOptionCode.setResult(jsonOut,17,order.getId(),true,"");
         }catch (Exception e) {
             e.printStackTrace();
             StaticOptionCode.setResult(jsonOut,18,"",false,"");

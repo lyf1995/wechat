@@ -242,6 +242,7 @@ public class CommodityController {
         commodity.setIsDelete(jsonIn.getIntValue("status"));
         try {
             commodityDao.addCommodity(commodity);
+            commodity.setId(commodity.getId());
             StaticOptionCode.setResult(jsonOut,17,commodity,true,"");
         } catch (Exception e) {
             e.printStackTrace();
@@ -345,6 +346,5 @@ public class CommodityController {
         }
         return jsonOut;
     }
-
 }
 

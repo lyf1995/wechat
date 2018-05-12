@@ -43,10 +43,14 @@
     <update id="reductionCommodity">
         UPDATE t_goods SET is_delete = 0 WHERE id = #{id}
     </update>
-    <insert id="addCommodity">
+    <insert id="addCommodity" parameterType="cn.com.lyf.wechat.entity.Commodity" useGeneratedKeys="true" keyProperty="commodity.id" keyColumn="id">
         INSERT INTO t_goods (name,subtitle,type_id,retail_price,vip_price,stock,is_delete)
         VALUES
         (#{commodity.name},#{commodity.subtitle},#{commodity.typeId}, #{commodity.retailPrice}
         ,#{commodity.vipPrice},#{commodity.stock},#{commodity.isDelete})
     </insert>
+
+    <update id="updateMainImage">
+        UPDATE t_goods SET main_image = #{path} WHERE id = #{id}
+    </update>
 </mapper>

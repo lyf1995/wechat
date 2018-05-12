@@ -28,4 +28,7 @@ public interface CommodityDao extends BaseMapper<Commodity> {
     List<Commodity> selectCommodityByTypeId(@Param("typeId")int typeId);
 
     List<Commodity> selectCommodityByName(@Param("name")String name);
+
+    //插入主图
+    void updateMainImage(@Param("path") String path,@Param("id") int id);
 }
