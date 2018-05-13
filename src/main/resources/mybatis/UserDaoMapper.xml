@@ -55,9 +55,9 @@
 		UPDATE t_user SET is_delete = #{user.isDelete} WHERE id = #{user.id}
 	</update>
 
-	<insert id="newUser">
+	<insert id="newUser" parameterType="cn.com.lyf.wechat.entity.User" useGeneratedKeys="true" keyProperty="user.id" keyColumn="id">
 		INSERT INTO t_user (phone, name, password,money, regist_time,is_delete,type)
 		VALUES
-		(#{user.phone},#{user.name},#{user.password},#{user.money}, #{user.registTime}, #{user.isDelete}, #{user.type})
+		(#{user.phone},#{user.name},#{user.password},10000, #{user.registTime}, #{user.isDelete}, #{user.type})
 	</insert>
 </mapper>

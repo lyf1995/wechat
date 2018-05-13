@@ -218,13 +218,13 @@ public class UserController {
             user.setPhone(jsonIn.getString("phone"));
             user.setName(jsonIn.getString("name"));
             user.setPassword(jsonIn.getString("password"));
-            user.setMoney(1000);
+            user.setMoney(10000);
             user.setType(1);
             user.setIsDelete(0);
             user.setRegistTime(new Date());
             try {
                 userDao.newUser(user);
-                StaticOptionCode.setResult(jsonOut,6,"",true,"");
+                StaticOptionCode.setResult(jsonOut,6,user.getId(),true,"");
             } catch (Exception e) {
                 e.printStackTrace();
                 StaticOptionCode.setResult(jsonOut,7,"",false,"");
