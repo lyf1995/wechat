@@ -11,6 +11,7 @@ import java.util.Date;
 public class ShareDto {
     private int id;
     private int shareUserId;
+    private String shareUserName;
     private int goodsId;
     private String goodsName;
     private String goodsMainImage;
@@ -19,6 +20,14 @@ public class ShareDto {
     private float amounts;
     private Date shareTime;
     private int isDelete;
+
+    public String getShareUserName() {
+        return shareUserName;
+    }
+
+    public void setShareUserName(String shareUserName) {
+        this.shareUserName = shareUserName;
+    }
 
     public String getShareUrl() {
         return shareUrl;

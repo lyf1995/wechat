@@ -67,7 +67,8 @@ public class StaticOptionCode {
             "新增成功",
             "新增失败",
             "还原成功",
-            "还原失败"
+            "还原失败",
+            "库存不足"
     };
 
 

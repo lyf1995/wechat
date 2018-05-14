@@ -1,9 +1,6 @@
 package cn.com.lyf.wechat.controller;
 
-import cn.com.lyf.wechat.dao.AddressDao;
-import cn.com.lyf.wechat.dao.GoodsOrderDao;
-import cn.com.lyf.wechat.dao.OrderDao;
-import cn.com.lyf.wechat.dao.UserDao;
+import cn.com.lyf.wechat.dao.*;
 import cn.com.lyf.wechat.dto.OrderDto;
 import cn.com.lyf.wechat.entity.Address;
 import cn.com.lyf.wechat.entity.GoodsOrder;
@@ -14,6 +11,7 @@ import cn.com.lyf.wechat.util.StaticOptionCode;
 import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.plugins.Page;
+import com.fasterxml.jackson.databind.annotation.JsonAppend;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -39,6 +37,8 @@ public class OrderController {
     private AddressDao addressDao;
     @Autowired
     private OrderService orderService;
+    @Autowired
+    private CommodityDao commodityDao;
 
 
     /*
@@ -59,7 +59,12 @@ public class OrderController {
         String phone = jsonIn.getString("phone").equals("")?null:jsonIn.getString("phone");
         if(phone!=null){
             User user = userDao.selectUsername(phone);
-            order.setUserId(user.getId());
+            if(user!=null) {
+                order.setUserId(user.getId());
+            }
+            else{
+                order.setUserId(-1);
+            }
         }
         String orderStartTime = jsonIn.getString("orderStartTime");
         String orderEndTime = jsonIn.getString("orderEndTime");
@@ -157,6 +162,7 @@ public class OrderController {
             order.setOrderTime(new Date());
             order.setIsDelete(0);
             order.setType(0);
+
             if(jsonIn.getIntValue("status")==1){
                 User user = userDao.selectUserById(order.getUserId());
                 user.setMoney(user.getMoney()-order.getTotalAmount());
@@ -173,7 +179,16 @@ public class OrderController {
                 goodsOrder.setGoodsName(goods.getString("productName"));
                 goodsOrder.setGoodsVipPrice(goods.getFloatValue("vipPrice"));
                 goodsOrder.setGoodsMainImage(goods.getString("mainImage"));
-                goodsOrderDao.addGoodsOrder(goodsOrder);
+                //查询商品库存
+                int stock = commodityDao.selectCommodityById(goodsOrder.getGoodsId()).getStock();
+                if(stock-goodsOrder.getGoodsNumber()>0){
+                    //更新商品库存
+                    commodityDao.updateCommodityStockById(goodsOrder.getGoodsId(),stock-goodsOrder.getGoodsNumber());
+                    goodsOrderDao.addGoodsOrder(goodsOrder);
+                }
+               else{
+                    StaticOptionCode.setResult(jsonOut,21,"",false,"");
+                }
             }
             StaticOptionCode.setResult(jsonOut,17,order.getId(),true,"");
         }catch (Exception e) {

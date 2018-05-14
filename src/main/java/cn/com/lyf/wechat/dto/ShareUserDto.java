@@ -1,5 +1,9 @@
 package cn.com.lyf.wechat.dto;
 
+import cn.com.lyf.wechat.entity.User;
+
+import java.util.List;
+
 /**
  * Created by Administrator on 2018/5/13 0013.
  */
@@ -9,6 +13,15 @@ public class ShareUserDto {
     private int clickUserId;
     private int status;
     private float amount;
+    private User clickUser;
+
+    public User getClickUser() {
+        return clickUser;
+    }
+
+    public void setClickUser(User clickUser) {
+        this.clickUser = clickUser;
+    }
 
     public int getId() {
         return id;

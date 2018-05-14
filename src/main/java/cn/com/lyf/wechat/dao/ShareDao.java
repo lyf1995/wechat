@@ -3,6 +3,7 @@ package cn.com.lyf.wechat.dao;
 import cn.com.lyf.wechat.entity.Address;
 import cn.com.lyf.wechat.entity.Share;
 import com.baomidou.mybatisplus.mapper.BaseMapper;
+import com.baomidou.mybatisplus.plugins.Page;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
@@ -19,9 +20,11 @@ public interface ShareDao extends BaseMapper<Share> {
 
     List<Share> selectShareByUserId(@Param("userId") int userId);
 
-    List<Share> selectAllShare();
+    List<Share> selectAllShare(Page<Share> page, @Param("share") Share share);
 
     Share selectShareById(@Param("shareId") int shareId);
 
     void UpdateShareAmountsById(@Param("id") int id, @Param("amounts") float amounts);
+
+    List<Share> selectAllSharePengyouquan();
 }

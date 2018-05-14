@@ -7,6 +7,7 @@
         <if test="status!=-1">
             AND status = #{status}
         </if>
+        ORDER BY order_time DESC
     </select>
 
     <select id="selectOrderById" resultType="cn.com.lyf.wechat.entity.Order">
@@ -30,6 +31,7 @@
         <if test="orderEndTime!=null and orderEndTime!=''">
             AND #{orderEndTime} >= t.order_time
         </if>
+        ORDER BY order_time DESC
     </select>
 
     <update id="changeOrderStatus">

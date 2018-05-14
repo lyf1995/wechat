@@ -31,4 +31,6 @@ public interface CommodityDao extends BaseMapper<Commodity> {
 
     //插入主图
     void updateMainImage(@Param("path") String path,@Param("id") int id);
+
+    void updateCommodityStockById(@Param("goodsId") int goodsId,@Param("stock") int stock);
 }

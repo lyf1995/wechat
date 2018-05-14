@@ -3,23 +3,8 @@
 <mapper namespace="cn.com.lyf.wechat.dao.GoodsOrderDao">
 
     <select id="selectGoodsOrderByOrderId" resultType="cn.com.lyf.wechat.entity.GoodsOrder">
-        select * from t_goods_order where order_id = #{orderId}
+        select * from t_goods_order where order_id = #{orderId} ORDER BY id DESC
     </select>
-
-    <select id="selectAllAddress" resultType="cn.com.lyf.wechat.entity.GoodsOrder">
-        select * from t_address t where is_delete = '0'
-        <if test="userId!=null and userId!=''">
-            AND t.user_id = #{userId}
-        </if>
-    </select>
-
-    <!--<update id="updateAddress">-->
-        <!--UPDATE t_address SET contacts = #{address.contacts},phone = #{address.phone},province = #{address.province},city = #{address.city},area = #{address.area},detail_address = #{address.detailAddress} WHERE id = #{address.id}-->
-    <!--</update>-->
-
-    <!--<update id="deleteAddress">-->
-        <!--UPDATE t_address SET is_delete = 1 WHERE id = #{id}-->
-    <!--</update>-->
 
     <insert id="addGoodsOrder">
         INSERT INTO t_goods_order (goods_id,order_id,goods_number,goods_vip_price,goods_name,goods_main_image)
@@ -27,7 +12,4 @@
         (#{goodsOrder.goodsId},#{goodsOrder.orderId},#{goodsOrder.goodsNumber},#{goodsOrder.goodsVipPrice},#{goodsOrder.goodsName},#{goodsOrder.goodsMainImage})
     </insert>
 
-    <!--<update id="updateDefault">-->
-        <!--UPDATE t_address SET is_default = 1 WHERE id = #{addressId}-->
-    <!--</update>-->
 </mapper>

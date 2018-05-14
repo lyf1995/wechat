@@ -3,7 +3,18 @@
 <mapper namespace="cn.com.lyf.wechat.dao.ShareDao">
 
     <select id="selectAllShare" resultType="cn.com.lyf.wechat.entity.Share">
-        select * from t_share where is_delete = '0'
+        select * from t_share t where is_delete = '0'
+        <if test="share.shareUserId!=null and share.shareUserId!=''">
+            AND t.share_user_id = #{share.shareUserId}
+        </if>
+        <if test="share.goodsName!=null and share.goodsName!=''">
+            AND t.goods_name LIKE #{share.goodsName}
+        </if>
+        ORDER BY share_time DESC
+    </select>
+
+    <select id="selectAllSharePengyouquan" resultType="cn.com.lyf.wechat.entity.Share">
+        select * from t_share where is_delete = 0 ORDER BY share_time DESC
     </select>
 
     <select id="selectShareById" resultType="cn.com.lyf.wechat.entity.Share">
@@ -11,7 +22,7 @@
     </select>
 
     <select id="selectShareByUserId" resultType="cn.com.lyf.wechat.entity.Share">
-        select * from t_share where share_user_id = #{userId} and is_delete = 0
+        select * from t_share where share_user_id = #{userId} and is_delete = 0 ORDER BY share_time DESC
     </select>
 
     <update id="UpdateShareAmountsById">
