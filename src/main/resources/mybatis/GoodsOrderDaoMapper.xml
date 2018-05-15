@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.lyf.wechat.dao.GoodsOrderDao">
+
+    <select id="selectGoodsOrderByOrderId" resultType="cn.com.lyf.wechat.entity.GoodsOrder">
+        select * from t_goods_order where order_id = #{orderId} ORDER BY id DESC
+    </select>
+
+    <insert id="addGoodsOrder">
+        INSERT INTO t_goods_order (goods_id,order_id,goods_number,goods_vip_price,goods_name,goods_main_image)
+        VALUES
+        (#{goodsOrder.goodsId},#{goodsOrder.orderId},#{goodsOrder.goodsNumber},#{goodsOrder.goodsVipPrice},#{goodsOrder.goodsName},#{goodsOrder.goodsMainImage})
+    </insert>
+
+</mapper>

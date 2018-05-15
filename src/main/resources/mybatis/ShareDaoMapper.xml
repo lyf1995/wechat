@@ -1,0 +1,45 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.lyf.wechat.dao.ShareDao">
+
+    <select id="selectAllShare" resultType="cn.com.lyf.wechat.entity.Share">
+        select * from t_share t where is_delete = '0'
+        <if test="share.shareUserId!=null and share.shareUserId!=''">
+            AND t.share_user_id = #{share.shareUserId}
+        </if>
+        <if test="share.goodsName!=null and share.goodsName!=''">
+            AND t.goods_name LIKE #{share.goodsName}
+        </if>
+        ORDER BY share_time DESC
+    </select>
+
+    <select id="selectAllSharePengyouquan" resultType="cn.com.lyf.wechat.entity.Share">
+        select * from t_share where is_delete = 0 ORDER BY share_time DESC
+    </select>
+
+    <select id="selectShareById" resultType="cn.com.lyf.wechat.entity.Share">
+        select * from t_share where id = #{shareId}
+    </select>
+
+    <select id="selectShareByUserId" resultType="cn.com.lyf.wechat.entity.Share">
+        select * from t_share where share_user_id = #{userId} and is_delete = 0 ORDER BY share_time DESC
+    </select>
+
+    <update id="UpdateShareAmountsById">
+        UPDATE t_share SET amounts = #{amounts} WHERE id = #{id}
+    </update>
+
+    <update id="deleteAddress">
+        UPDATE t_address SET is_delete = 1 WHERE id = #{id}
+    </update>
+
+    <insert id="addShare" parameterType="cn.com.lyf.wechat.entity.Share" useGeneratedKeys="true" keyProperty="share.id" keyColumn="id">
+        INSERT INTO t_share (share_user_id,goods_id,goods_name,goods_mainImage,goods_vipPrice,amounts,share_time,is_delete)
+        VALUES
+        (#{share.shareUserId},#{share.goodsId},#{share.goodsName},#{share.goodsMainImage},#{share.goodsVipPrice},#{share.amounts},#{share.shareTime},#{share.isDelete})
+    </insert>
+
+    <update id="upDateUrlById">
+        UPDATE t_share SET share_url = #{shareUrl} WHERE id = #{id}
+    </update>
+</mapper>

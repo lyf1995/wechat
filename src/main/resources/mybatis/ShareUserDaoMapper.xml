@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.lyf.wechat.dao.ShareUserDao">
+
+    <select id="selectShareUserByShareId" resultType="cn.com.lyf.wechat.entity.ShareUser">
+        select * from t_share_user where share_id = #{shareId} ORDER BY id DESC
+    </select>
+
+    <insert id="addShareUser">
+        INSERT INTO t_share_user (share_id,click_user_id,status,amount)
+        VALUES
+        (#{shareUser.shareId},#{shareUser.clickUserId},#{shareUser.status},#{shareUser.amount})
+    </insert>
+
+</mapper>

@@ -18,8 +18,8 @@ public class UserServiceImpl extends ServiceImpl<UserDao, User> implements UserS
     private UserDao userDao;
 
     @Override
-    public Page<User> selectAllUser(Page<User> page , User user) {
-        List<User> liste = userDao.selectAllUser(page,user);
+    public Page<User> selectAllUser(Page<User> page , User user,String recentLoginStartTime,String recentLoginEndTime,String registStartTime,String registEndTime) {
+        List<User> liste = userDao.selectAllUser(page,user,recentLoginStartTime,recentLoginEndTime,registStartTime,registEndTime);
         page.setRecords(liste);
         return page;
     }

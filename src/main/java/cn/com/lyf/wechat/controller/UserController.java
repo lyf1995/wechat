@@ -13,6 +13,7 @@ import cn.com.lyf.wechat.util.Md5Utils;
 import cn.com.lyf.wechat.util.StaticOptionCode;
 import com.alibaba.druid.support.logging.Log;
 import com.alibaba.druid.support.logging.LogFactory;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 import com.baomidou.mybatisplus.plugins.Page;
@@ -45,23 +46,24 @@ public class UserController {
     @ResponseBody
     public JSONObject submitLogin(HttpServletRequest request, @RequestBody String json) {
         JSONObject jsonIn = JSONObject.parseObject(json);
-        String username = jsonIn.getString("username");
+        String phone = jsonIn.getString("phone");
         String password = jsonIn.getString("password");
+        int type = jsonIn.getInteger("type");
         JSONObject jsonOut = new JSONObject();
         //设置response.addHeader
         //Global.initResponse();
         UserDto userDto = new UserDto();//不够再加
         try {
-            UsernamePasswordToken token = new UsernamePasswordToken(username, Md5Utils.MD5Encode(password, "utf-8", false));
-            SecurityUtils.getSubject().login(token);
-            Session session = SecurityUtils.getSubject().getSession();
-            User user = userDao.selectUserByName(username, Md5Utils.MD5Encode(password, "utf-8", false));
+
+            User user = userDao.selectUserByName(phone,password,type);
+            System.out.println(user);
             if (user != null){
                 userDao.updateLastLoginById(user.getId(), new Date());
                 userDto.setId(user.getId());
-                userDto.setUserName(user.getUserName());
-                userDto.setRealName(user.getRealName());
-                userDto.setRoleId(user.getRoleId());
+                userDto.setPhone(user.getPhone());
+                userDto.setName(user.getName());
+                userDto.setMoney(user.getMoney());
+                userDto.setPassword(user.getPassword());
                 StaticOptionCode.setResult(jsonOut,0,userDto,true,"");
             }else {
                 StaticOptionCode.setResult(jsonOut,1,"",false,"");
@@ -74,8 +76,39 @@ public class UserController {
     }
 
     /**
+     * 注册
+     */
+    @RequestMapping(value = "/regist")
+    @ResponseBody
+    public JSONObject regist(HttpServletRequest request, @RequestBody String json) {
+        JSONObject jsonIn = JSONObject.parseObject(json);
+        JSONObject jsonOut = new JSONObject();
+        User user2 = userDao.selectUsername(jsonIn.getString("phone"));
+        if (user2 != null) {
+            StaticOptionCode.setResult(jsonOut,2,"",false,"");
+        } else {
+            User user = new User();
+            user.setPhone(jsonIn.getString("phone"));
+            user.setName(jsonIn.getString("phone"));
+            user.setPassword(jsonIn.getString("password"));
+            user.setType(1);
+            user.setIsDelete(0);
+            user.setRegistTime(new Date());
+            try {
+                userDao.newUser(user);
+                StaticOptionCode.setResult(jsonOut,6,"",true,"");
+            } catch (Exception e) {
+                e.printStackTrace();
+                StaticOptionCode.setResult(jsonOut,7,"",false,"");
+            }
+            StaticOptionCode.setResult(jsonOut,3,"",true,"");
+        }
+        return jsonOut;
+    }
+
+    /**
      * 账号重复判断
-     * hsz 2018年3月13日17:31:51
+     * lyf 2018年3月13日17:31:51
      */
     @RequestMapping(value = "/selectUsername")
     @ResponseBody
@@ -99,7 +132,7 @@ public class UserController {
      * 修改密码
      * 1.有原密码修改新密码
      * 2.超级管理员帮助修改密码
-     * hsz 2018年3月15日14:14:04
+     * lyf 2018年3月15日14:14:04
      */
     @RequestMapping(value = "/updatePassword")
     @ResponseBody
@@ -119,7 +152,7 @@ public class UserController {
         try {
             switch (type) {
                 case 1: {
-                    user = userDao.selectUserByName(username, Md5Utils.MD5Encode(password, "utf-8", false));
+//                    user = userDao.selectUserByName(username, Md5Utils.MD5Encode(password, "utf-8", false));
                     if (user != null) {
                         userDao.updatePasswordById(user.getId(), Md5Utils.MD5Encode(newPassword, "utf-8", false));
                         StaticOptionCode.setResult(jsonOut,4,"",true,"");
@@ -149,48 +182,97 @@ public class UserController {
     }
 
     /**
+     * 根据userId查询用户
+     * lyf 2018年3月13日16:15:28
+     */
+    @RequestMapping(value="/selectUserById",method=RequestMethod.POST)
+    @ResponseBody
+    public JSONObject selectUserById(HttpServletRequest request,@RequestBody String json) {
+        JSONObject jsonIn = JSONObject.parseObject(json);
+        JSONObject jsonOut = new JSONObject();
+        int userId = jsonIn.getIntValue("userId");
+        try{
+            User user = userDao.selectUserById(userId);
+            StaticOptionCode.setResult(jsonOut,7,user,true,"");
+        }catch (Exception e) {
+            e.printStackTrace();
+            StaticOptionCode.setResult(jsonOut,7,"",false,"");
+        }
+        return jsonOut;
+    }
+
+    /**
      * 新建用户
-     * hsz 2018年3月13日16:15:28
+     * lyf 2018年3月13日16:15:28
      */
     @RequestMapping(value="/newUser",method=RequestMethod.POST)
     @ResponseBody
     public JSONObject newUser(HttpServletRequest request,@RequestBody String json) {
         JSONObject jsonIn = JSONObject.parseObject(json);
         JSONObject jsonOut = new JSONObject();
-        User user2 = userDao.selectUsername(jsonIn.getString("userName"));
+        User user2 = userDao.selectUsername(jsonIn.getString("phone"));
         if (user2 != null) {
             StaticOptionCode.setResult(jsonOut,2,"",false,"");
         } else {
+            User user = new User();
+            user.setPhone(jsonIn.getString("phone"));
+            user.setName(jsonIn.getString("name"));
+            user.setPassword(jsonIn.getString("password"));
+            user.setMoney(10000);
+            user.setType(1);
+            user.setIsDelete(0);
+            user.setRegistTime(new Date());
+            try {
+                userDao.newUser(user);
+                StaticOptionCode.setResult(jsonOut,6,user.getId(),true,"");
+            } catch (Exception e) {
+                e.printStackTrace();
+                StaticOptionCode.setResult(jsonOut,7,"",false,"");
+            }
             StaticOptionCode.setResult(jsonOut,3,"",true,"");
         }
-        User user = new User();
-        user.setRoleId(jsonIn.getString("roleId"));
-        user.setUserName(jsonIn.getString("userName"));
-        user.setPassword(jsonIn.getString("password"));
-        user.setRealName(jsonIn.getString("realName"));
-        user.setMobile(jsonIn.getIntValue("mobile"));
-        user.setEmail(jsonIn.getString("email"));
-        user.setPassword(Md5Utils.MD5Encode(user.getPassword(),"utf-8",false));
-        user.setStatus("0");
-        user.setCreateTime(new Date());
-        user.setCreateBy(jsonIn.getString("man"));
-        if (user.getRoleId().equals("7")) {
-            user.setRoleName("管理员");
-        }else{
-            user.setRoleName("用户");
-        }
-        //设置response.addHeader
-        //        Global.initResponse();
-        String ip=Global.getIpAddr(request);
-        try {
-            userDao.newUser(user);
-            StaticOptionCode.setResult(jsonOut,6,"",true,"");
-        } catch (Exception e) {
-            e.printStackTrace();
-            StaticOptionCode.setResult(jsonOut,7,"",false,"");
+
+        return jsonOut;
+    }
+
+
+    /**
+     * 批量创建用户
+     * lyf 2018年3月13日16:15:28
+     */
+    @RequestMapping(value="/batchAddUser",method=RequestMethod.POST)
+    @ResponseBody
+    public JSONObject batchAddUser(HttpServletRequest request,@RequestBody String json) {
+//        JSONObject jsonIn = JSONObject.parseObject(json);
+        JSONArray jsonIn = JSONArray.parseArray(json);
+        JSONObject jsonOut = new JSONObject();
+        for(int i = 0;i<jsonIn.size();i++){
+            JSONObject obj = jsonIn.getJSONObject(i);
+            User user2 = userDao.selectUsername(obj.getString("phone"));
+            if (user2 != null) {
+                StaticOptionCode.setResult(jsonOut,2,"",false,obj.getString("phone"));
+                break;
+            } else {
+                User user = new User();
+                user.setPhone(obj.getString("phone"));
+                user.setName(obj.getString("name"));
+                user.setPassword(obj.getString("password"));
+                user.setMoney(1000);
+                user.setType(1);
+                user.setIsDelete(0);
+                user.setRegistTime(new Date());
+                try {
+                    userDao.newUser(user);
+                    StaticOptionCode.setResult(jsonOut,6,"",true,"");
+                } catch (Exception e) {
+                    e.printStackTrace();
+                    StaticOptionCode.setResult(jsonOut,7,"",false,"");
+                }
+            }
         }
         return jsonOut;
     }
+
 
     /**
      * 修改用户信息
@@ -202,24 +284,12 @@ public class UserController {
         JSONObject jsonIn = JSONObject.parseObject(json);
         User user = new User();
         user.setId(jsonIn.getIntValue("id"));
-        user.setRoleId(jsonIn.getString("roleId"));//
-        user.setUserName(jsonIn.getString("username"));
-//        user.setPassword(jsonIn.getString("password"));
-        user.setRealName(jsonIn.getString("realName"));
-        user.setMobile(jsonIn.getIntValue("mobile"));
-        user.setEmail(jsonIn.getString("email"));
-//        user.setDepartment(jsonIn.getString("department"));
-//        user.setBirthday(jsonIn.getDate("birthday"));
-//        user.setCity(jsonIn.getString("city"));
-//        user.setQq(jsonIn.getString("qq"));
-//        user.setWeixin(jsonIn.getString("weixin"));
-//        user.setSex(jsonIn.getString("sex"));
-        user.setUpdateBy(jsonIn.getString("man"));
-        user.setUpdateTime(new Date());
-        String ip=Global.getIpAddr(request);
+        user.setPhone(jsonIn.getString("phone"));//
+        user.setName(jsonIn.getString("name"));
+        user.setPassword(jsonIn.getString("password"));
         JSONObject jsonOut = new JSONObject();
         try {
-            userDao.updateById(user);
+            userDao.updateUserById(user);
             StaticOptionCode.setResult(jsonOut,13,"",true,"");
         } catch (Exception e) {
             e.printStackTrace();
@@ -236,19 +306,20 @@ public class UserController {
     @ResponseBody
     public JSONObject selectAllUser(HttpServletRequest request,@RequestBody String json){
         JSONObject jsonIn = JSONObject.parseObject(json);
-        Integer current=jsonIn.getInteger("current");
-        Integer size=jsonIn.getInteger("size");
+        Integer pageIndex=jsonIn.getInteger("pageIndex");
+        Integer pageSize=jsonIn.getInteger("pageSize");
         User user = new User();
-        //工号
-        user.setId(jsonIn.getString("id").equals("")?null:jsonIn.getIntValue("id"));
-        user.setUserName(jsonIn.getString("userName").equals("")?null:"%"+jsonIn.getString("userName")+"%");
-        user.setRealName(jsonIn.getString("realName").equals("")?null:"%"+jsonIn.getString("realName")+"%");
-        user.setRoleId(jsonIn.getString("roleId"));
+        user.setPhone(jsonIn.getString("phone").equals("")?null:jsonIn.getString("phone"));
+        user.setName(jsonIn.getString("name").equals("")?null:"%"+jsonIn.getString("name")+"%");
+        String recentLoginStartTime = jsonIn.getString("recentLoginStartTime");
+        String recentLoginEndTime = jsonIn.getString("recentLoginEndTime");
+        String registStartTime = jsonIn.getString("registStartTime");
+        String registEndTime = jsonIn.getString("registEndTime");
 
         JSONObject jsonOut = new JSONObject();
         try {
-            Page<User> page = new Page<User>(current,size);
-            page= userService.selectAllUser(page, user);
+            Page<User> page = new Page<User>(pageIndex,pageSize);
+            page= userService.selectAllUser(page, user,recentLoginStartTime,recentLoginEndTime,registStartTime,registEndTime);
             StaticOptionCode.setResult(jsonOut,9,page.getRecords(),true,""+page.getTotal());
         } catch (Exception e) {
             e.printStackTrace();
@@ -267,14 +338,11 @@ public class UserController {
     public JSONObject delectUser(HttpServletRequest request,@RequestBody String json){
         JSONObject jsonIn = JSONObject.parseObject(json);
         User user = new User();
-        //工号
         user.setId(jsonIn.getIntValue("id"));
-        user.setIsDelete("1");
-        String man = jsonIn.getString("man");
-        String ip=Global.getIpAddr(request);
+        user.setIsDelete(1);
         JSONObject jsonOut = new JSONObject();
         try {
-            userDao.updateById(user);
+            userDao.delectUser(user);
             StaticOptionCode.setResult(jsonOut,15,"",true,"");
         } catch (Exception e) {
             e.printStackTrace();
@@ -282,7 +350,6 @@ public class UserController {
         }
         return jsonOut;
     }
-
 
     /**
      * 注销

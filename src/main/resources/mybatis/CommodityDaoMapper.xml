@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.lyf.wechat.dao.CommodityDao">
+
+    <select id="selectAllCommodity" resultType="cn.com.lyf.wechat.entity.Commodity">
+        select * from t_goods t where t.is_delete = #{commodity.isDelete}
+        <if test="commodity.typeId!=null and commodity.typeId!=''">
+            AND t.type_id = #{commodity.typeId}
+        </if>
+        <if test="commodity.name!=null and commodity.name!=''">
+            AND t.name LIKE #{commodity.name}
+        </if>
+        <if test="commodity.subtitle!=null and commodity.subtitle!=''">
+            AND t.subtitle LIKE #{commodity.subtitle}
+        </if>
+        ORDER BY id DESC
+    </select>
+
+    <select id="selectCommodityById" resultType="cn.com.lyf.wechat.entity.Commodity">
+        select * from t_goods t where t.id = #{id}
+    </select>
+
+    <select id="selectCommodityByTypeId" resultType="cn.com.lyf.wechat.entity.Commodity">
+        select * from t_goods t where t.type_id = #{typeId} and t.is_delete = 0 ORDER BY id DESC
+    </select>
+
+    <select id="selectCommodityByName" resultType="cn.com.lyf.wechat.entity.Commodity">
+        select * from t_goods t where t.name LIKE #{name} and t.is_delete = 0 ORDER BY id DESC
+    </select>
+
+    <update id="updateCommodity">
+        UPDATE t_goods SET name = #{commodity.name},subtitle = #{commodity.subtitle},retail_price = #{commodity.retailPrice}
+        ,vip_price = #{commodity.vipPrice},stock = #{commodity.stock},type_id = #{commodity.typeId},is_delete = #{commodity.isDelete} WHERE id = #{commodity.id}
+    </update>
+
+    <update id="deleteCommodity">
+        UPDATE t_goods SET is_delete = 1 WHERE id = #{id}
+    </update>
+
+    <update id="reductionCommodity">
+        UPDATE t_goods SET is_delete = 0 WHERE id = #{id}
+    </update>
+    <insert id="addCommodity" parameterType="cn.com.lyf.wechat.entity.Commodity" useGeneratedKeys="true" keyProperty="commodity.id" keyColumn="id">
+        INSERT INTO t_goods (name,subtitle,type_id,retail_price,vip_price,stock,is_delete)
+        VALUES
+        (#{commodity.name},#{commodity.subtitle},#{commodity.typeId}, #{commodity.retailPrice}
+        ,#{commodity.vipPrice},#{commodity.stock},#{commodity.isDelete})
+    </insert>
+
+    <update id="updateMainImage">
+        UPDATE t_goods SET main_image = #{path} WHERE id = #{id}
+    </update>
+
+    <update id="updateCommodityStockById">
+        UPDATE t_goods SET stock = #{stock} WHERE id = #{goodsId}
+    </update>
+</mapper>

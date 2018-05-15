@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd" >
+<mapper namespace="cn.com.lyf.wechat.dao.TypeDao">
+
+	<select id="selectTypeByName" resultType="cn.com.lyf.wechat.entity.Type">
+		select * from t_goods_type where type_name = #{typeName} and is_delete = '0'
+	</select>
+
+	<select id="selectAllType" resultType="cn.com.lyf.wechat.entity.Type">
+		select * from t_goods_type t where is_delete = '0'
+		<if test="type.id!=null and type.id!=''">
+			AND t.id = #{type.id}
+		</if>
+		<if test="type.typeName!=null and type.typeName!=''">
+			AND t.type_name LIKE #{type.typeName}
+		</if>
+	</select>
+
+	<update id="updateTypeById">
+		UPDATE t_goods_type SET type_name = #{type.typeName},type_describe = #{type.typeDescribe} WHERE id = #{type.id}
+	</update>
+
+	<update id="deleteType">
+		UPDATE t_goods_type SET is_delete = #{type.isDelete} WHERE id = #{type.id}
+	</update>
+
+	<insert id="addType">
+		INSERT INTO t_goods_type (type_name,type_describe,is_delete)
+		VALUES
+		(#{type.typeName},#{type.typeDescribe},#{type.isDelete})
+	</insert>
+</mapper>
